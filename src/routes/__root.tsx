@@ -83,20 +83,24 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "NANTI — Memori kerja AI untuk WhatsApp" },
+      { title: "Hari ini · NANTI" },
       {
         name: "description",
-        content: "NANTI mengubah percakapan WhatsApp menjadi komitmen, tenggat dan pengingat yang tidak pernah terlupakan.",
+        content: "Ringkasan harian dari NANTI : Ingetin lo harus chat siapa hari ini!",
       },
       { name: "author", content: "NANTI" },
-      { property: "og:title", content: "NANTI — Memori kerja AI untuk WhatsApp" },
+      { property: "og:title", content: "Hari ini · NANTI" },
       {
         property: "og:description",
-        content: "Jangan pernah kehilangan komitmen di WhatsApp lagi.",
+        content: "Ringkasan harian dari NANTI : Ingetin lo harus chat siapa hari ini!",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Hari ini · NANTI" },
+      { name: "twitter:description", content: "Ringkasan harian dari NANTI : Ingetin lo harus chat siapa hari ini!" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/844d94b3-6ea1-4852-8ad5-b5ded283e4f0" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/844d94b3-6ea1-4852-8ad5-b5ded283e4f0" },
     ],
     links: [
       {

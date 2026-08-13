@@ -13,9 +13,9 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Hari ini · NANTI" },
-      { name: "description", content: "Ringkasan harian dari NANTI: yang terlambat, jatuh tempo hari ini, dan orang yang menunggu Anda." },
+      { name: "description", content: "Ringkasan harian dari NANTI : Ingetin lo harus chat siapa hari ini!" },
       { property: "og:title", content: "Hari ini · NANTI" },
-      { property: "og:description", content: "Briefing AI harian dari percakapan WhatsApp Anda." },
+      { property: "og:description", content: "Ringkasan harian dari NANTI : Ingetin lo harus chat siapa hari ini!" },
     ],
   }),
   component: Today,
