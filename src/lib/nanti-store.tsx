@@ -42,6 +42,7 @@ const defaultState: State = {
 };
 
 interface Ctx extends State {
+  hydrated: boolean;
   update: (id: string, patch: Partial<Item>) => void;
   addItems: (items: Item[]) => void;
   complete: (id: string) => void;
@@ -59,6 +60,7 @@ const StoreContext = createContext<Ctx | null>(null);
 
 export function NantiProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<State>(defaultState);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     try {
@@ -70,6 +72,7 @@ export function NantiProvider({ children }: { children: ReactNode }) {
     } catch {
       /* ignore */
     }
+    setHydrated(true);
   }, []);
 
   const persist = useCallback((next: State) => {
@@ -97,6 +100,7 @@ export function NantiProvider({ children }: { children: ReactNode }) {
   const value = useMemo<Ctx>(
     () => ({
       ...state,
+      hydrated,
       update: (id, patch) => mutate((s) => ({ ...s, items: s.items.map((i) => (i.id === id ? { ...i, ...patch } : i)) })),
       addItems: (newItems) => mutate((s) => ({ ...s, items: [...newItems, ...s.items] })),
       complete: (id) =>
@@ -124,7 +128,7 @@ export function NantiProvider({ children }: { children: ReactNode }) {
       personOf: (id) => state.people.find((p) => p.id === id),
       projectOf: (id) => state.projects.find((p) => p.id === id),
     }),
-    [state, mutate, persist],
+    [state, hydrated, mutate, persist],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

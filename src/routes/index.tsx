@@ -1,5 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { ArrowRight, Hourglass } from "lucide-react";
 import { EmptyState, Section } from "@/components/nanti/app-shell";
@@ -22,10 +22,15 @@ export const Route = createFileRoute("/")({
 });
 
 function Today() {
-  const { items, settings, personOf, complete, snooze, update } = useNanti();
+  const { items, settings, hydrated, personOf, complete, snooze, update } = useNanti();
+  const navigate = useNavigate();
   const openDetail = useItemDetail();
   const [dismissed, setDismissed] = useState(false);
   const [sweepOpen, setSweepOpen] = useState(new Date().getHours() >= 17);
+
+  useEffect(() => {
+    if (hydrated && !settings.onboarded) void navigate({ to: "/welcome" });
+  }, [hydrated, settings.onboarded, navigate]);
 
   const overdue = useMemo(() => items.filter(isOverdue), [items]);
   const dueToday = useMemo(() => items.filter(isDueToday), [items]);
