@@ -104,7 +104,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <button
         aria-label="Impor percakapan"
         onClick={() => openImport(true)}
-        className="fixed bottom-20 right-4 z-30 flex size-13 items-center justify-center rounded-full bg-primary p-4 text-primary-foreground shadow-lift transition-transform active:scale-95 lg:hidden"
+        className="fixed bottom-20 right-4 z-30 flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lift transition-transform active:scale-95 lg:hidden"
       >
         <Plus className="size-5" />
       </button>
