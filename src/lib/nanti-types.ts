@@ -6,7 +6,7 @@ export interface Person {
   id: string;
   name: string;
   org: string;
-  role?: string;
+  role?: string | undefined;
   lastConversation: string; // ISO date
   activity: { date: string; text: string }[];
 }
@@ -21,15 +21,15 @@ export interface Project {
 export interface Item {
   id: string;
   title: string;
-  description?: string;
+  description?: string | undefined;
   kind: ItemKind;
   status: ItemStatus;
   priority: Priority;
-  due?: string; // ISO date
-  time?: string; // HH:mm
-  since?: string; // ISO date, for waiting items
-  personId?: string;
-  projectId?: string;
+  due?: string | undefined; // ISO date
+  time?: string | undefined; // HH:mm
+  since?: string | undefined; // ISO date, for waiting items
+  personId?: string | undefined;
+  projectId?: string | undefined;
   source: string; // WhatsApp group / chat name
   quote: string;
   aiNote: string;
