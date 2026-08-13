@@ -87,7 +87,7 @@ export function ItemDetailProvider({ children }: { children: ReactNode }) {
                   <select
                     className="h-8 rounded-md border border-input bg-surface px-2 text-[13px]"
                     value={item.projectId ?? ""}
-                    onChange={(e) => update(item.id, { projectId: e.target.value || undefined })}
+                    onChange={(e) => update(item.id, { projectId: e.target.value ? e.target.value : undefined })}
                   >
                     <option value="">Tanpa proyek</option>
                     {projects.map((p) => (

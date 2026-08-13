@@ -112,7 +112,8 @@ export function NantiProvider({ children }: { children: ReactNode }) {
             const from = i.due ? new Date(i.due) : new Date();
             from.setDate(from.getDate() + days);
             const iso = from.toISOString().slice(0, 10);
-            return { ...i, due: i.kind === "waiting" ? i.due : iso, since: i.kind === "waiting" ? dayOffset(0) : i.since };
+            const next: Item = i.kind === "waiting" ? { ...i, since: dayOffset(0) } : { ...i, due: iso };
+            return next;
           }),
         })),
       track: (id) => mutate((s) => ({ ...s, items: s.items.map((i) => (i.id === id ? { ...i, status: "open" } : i)) })),

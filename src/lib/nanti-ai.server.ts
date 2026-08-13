@@ -37,6 +37,19 @@ Balas HANYA JSON valid:
 {"summary":"kalimat ringkas Bahasa Indonesia","items":[{"title":"","kind":"task|commitment|deadline|waiting|followup","priority":"high|medium|low","dueOffsetDays":0,"person":"nama atau null","org":"nama perusahaan atau null","source":"nama grup/chat","quote":"kutipan asli","aiNote":"interpretasi singkat Bahasa Indonesia","confidence":0.0}]}
 dueOffsetDays: 0 = hari ini, 1 = besok, dst. null jika tidak ada tenggat. Untuk "waiting" gunakan null.`;
 
+export interface ExtractedItem {
+  title: string;
+  kind: "task" | "commitment" | "deadline" | "waiting" | "followup";
+  priority: "high" | "medium" | "low";
+  dueOffsetDays: number | null;
+  person: string | null;
+  org: string | null;
+  source: string | null;
+  quote: string;
+  aiNote: string;
+  confidence: number;
+}
+
 export async function extractItems(text: string, sourceHint?: string) {
   const raw = await chat(
     [
@@ -46,10 +59,13 @@ export async function extractItems(text: string, sourceHint?: string) {
     true,
   );
   try {
-    const parsed = JSON.parse(raw) as { summary?: string; items?: unknown[] };
-    return { summary: parsed.summary ?? "", items: Array.isArray(parsed.items) ? parsed.items : [] };
+    const parsed = JSON.parse(raw) as { summary?: string; items?: ExtractedItem[] };
+    return {
+      summary: parsed.summary ?? "",
+      items: Array.isArray(parsed.items) ? parsed.items : ([] as ExtractedItem[]),
+    };
   } catch {
-    return { summary: "NANTI tidak dapat membaca percakapan ini.", items: [] };
+    return { summary: "NANTI tidak dapat membaca percakapan ini.", items: [] as ExtractedItem[] };
   }
 }
 

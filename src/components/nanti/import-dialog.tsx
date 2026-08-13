@@ -58,7 +58,7 @@ export function ImportDialogProvider({ children }: { children: ReactNode }) {
     setDrafts(null);
     try {
       const res = await analyzeConversation({ data: { text } });
-      const list = (res.items as Draft[]) ?? [];
+      const list = (res.items ?? []) as Draft[];
       setDrafts(list);
       setSummary(res.summary);
       setSelected(Object.fromEntries(list.map((_, i) => [i, true])));
@@ -75,22 +75,24 @@ export function ImportDialogProvider({ children }: { children: ReactNode }) {
     const chosen = drafts.filter((_, i) => all || selected[i]);
     if (!chosen.length) return;
     const mapped: Item[] = chosen.map((d) => {
-      const match = people.find((p) => d.person && p.name.toLowerCase().includes(d.person.toLowerCase().split(" ")[0]));
-      return {
+      const match = people.find((p) => d.person && p.name.toLowerCase().includes((d.person.toLowerCase().split(" ")[0] ?? "")));
+      const due = d.kind === "waiting" || d.dueOffsetDays == null ? undefined : dayOffset(d.dueOffsetDays);
+      const item: Item = {
         id: newId("ai"),
         title: d.title,
         kind: (["task", "commitment", "deadline", "waiting", "followup"] as ItemKind[]).includes(d.kind) ? d.kind : "task",
         status: "open",
         priority: d.priority ?? "medium",
-        due: d.kind === "waiting" || d.dueOffsetDays == null ? undefined : dayOffset(d.dueOffsetDays),
-        since: d.kind === "waiting" ? dayOffset(0) : undefined,
-        personId: match?.id,
+        ...(due ? { due } : {}),
+        ...(d.kind === "waiting" ? { since: dayOffset(0) } : {}),
+        ...(match ? { personId: match.id } : {}),
         source: d.source || "Impor manual",
         quote: d.quote,
         aiNote: d.aiNote,
         confidence: d.confidence ?? 0.8,
         createdBy: "ai",
       };
+      return item;
     });
     addItems(mapped);
     toast.success(`${mapped.length} item dilacak oleh NANTI`);
