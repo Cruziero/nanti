@@ -32,6 +32,18 @@ const suggestions = [
   "Siapa yang perlu saya follow up hari ini?",
 ];
 
+function renderRich(text: string) {
+  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
+    part.startsWith("**") && part.endsWith("**") ? (
+      <strong key={i} className="font-semibold">
+        {part.slice(2, -2)}
+      </strong>
+    ) : (
+      part
+    ),
+  );
+}
+
 interface Msg {
   role: "user" | "assistant";
   text: string;
@@ -115,7 +127,7 @@ function AiPage() {
             </div>
           ) : (
             <div key={i} className="rise whitespace-pre-wrap text-[15px] leading-relaxed">
-              {m.text}
+              {renderRich(m.text)}
             </div>
           ),
         )}
