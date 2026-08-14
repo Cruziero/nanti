@@ -10,10 +10,10 @@ import { formatDate, openItems } from "@/lib/nanti-utils";
 export const Route = createFileRoute("/people")({
   head: () => ({
     meta: [
-      { title: "Orang · NANTI" },
-      { name: "description", content: "Memori hubungan kerja: komitmen Anda, komitmen mereka, dan riwayat percakapan." },
-      { property: "og:title", content: "Orang · NANTI" },
-      { property: "og:description", content: "Ingat siapa menjanjikan apa, kapan." },
+      { title: "People · NANTI" },
+      { name: "description", content: "Your relationship memory: your commitments, their commitments, and conversation history." },
+      { property: "og:title", content: "People · NANTI" },
+      { property: "og:description", content: "Remember who promised what, when." },
     ],
   }),
   component: PeoplePage,
@@ -27,15 +27,15 @@ function PeoplePage() {
 
   return (
     <div>
-      <PageHeader title="Orang" subtitle="Memori kerja Anda dengan setiap orang" />
+      <PageHeader title="People" subtitle="Your relationship memory" />
       <Input
         value={q}
         onChange={(e) => setQ(e.target.value)}
-        placeholder="Cari nama atau perusahaan..."
+        placeholder="Search name or company..."
         className="mb-5 bg-surface"
       />
       {list.length === 0 ? (
-        <EmptyState title="Tidak ada orang yang cocok." />
+        <EmptyState title="No matching people." />
       ) : (
         <div className="space-y-3">
           {list.map((p, n) => {
@@ -56,9 +56,9 @@ function PeoplePage() {
                       {p.role ? ` · ${p.role}` : ""}
                     </p>
                     <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-[12.5px] text-muted-foreground">
-                      <span>Percakapan terakhir: {formatDate(p.lastConversation)}</span>
-                      <span>Komitmen Anda: {commitments.length}</span>
-                      <span>Menunggu dari {p.name.split(" ")[0]}: {waiting.length}</span>
+                      <span>Last conversation: {formatDate(p.lastConversation)}</span>
+                      <span>Your commitments: {commitments.length}</span>
+                      <span>Waiting from {p.name.split(" ")[0]}: {waiting.length}</span>
                     </div>
                   </div>
                 </div>
@@ -76,9 +76,9 @@ function PeoplePage() {
 
                 <div className="mt-4 flex flex-wrap gap-2">
                   <Button size="sm" variant="outline" onClick={() => setOpenId(expanded ? null : p.id)}>
-                    {expanded ? "Sembunyikan riwayat" : "Lihat riwayat"}
+                    {expanded ? "Hide history" : "View history"}
                   </Button>
-                  <Button size="sm" onClick={() => toast.success(`Pengingat follow up ${p.name} dibuat`)}>
+                  <Button size="sm" onClick={() => toast.success(`Follow-up reminder created for ${p.name}`)}>
                     Follow up
                   </Button>
                 </div>

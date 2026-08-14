@@ -1,178 +1,438 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
-import { ArrowRight, Hourglass } from "lucide-react";
-import { EmptyState, Section } from "@/components/nanti/app-shell";
-import { ItemRow } from "@/components/nanti/item-row";
-import { Button } from "@/components/ui/button";
-import { useNanti } from "@/lib/nanti-store";
-import { formatDayHeadline, greeting, isDueToday, isOverdue, openItems, waitingDays } from "@/lib/nanti-utils";
-import { useItemDetail } from "@/components/nanti/item-detail";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import {
+  ArrowRight,
+  Brain,
+  CheckCircle2,
+  Clock,
+  Hourglass,
+  MessageSquareText,
+  Sparkles,
+  Zap,
+} from "lucide-react";
+import { MarketingLayout } from "@/components/nanti/marketing";
+import { Logo } from "@/components/nanti/logo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Hari ini · NANTI" },
-      { name: "description", content: "Ringkasan harian dari NANTI : Ingetin lo harus chat siapa hari ini!" },
-      { property: "og:title", content: "Hari ini · NANTI" },
-      { property: "og:description", content: "Ringkasan harian dari NANTI : Ingetin lo harus chat siapa hari ini!" },
+      { title: "NANTI · Your AI memory for WhatsApp" },
+      {
+        name: "description",
+        content:
+          "Never lose a commitment in WhatsApp again. NANTI turns conversations into tasks, commitments, reminders and follow-ups — automatically.",
+      },
+      { property: "og:title", content: "NANTI · Your AI memory for WhatsApp" },
+      {
+        property: "og:description",
+        content:
+          "Never lose a commitment in WhatsApp again. NANTI turns conversations into tasks, commitments, reminders and follow-ups.",
+      },
     ],
   }),
-  component: Today,
+  component: HomePage,
 });
 
-function Today() {
-  const { items, settings, hydrated, personOf, complete, snooze, update } = useNanti();
-  const navigate = useNavigate();
-  const openDetail = useItemDetail();
-  const [dismissed, setDismissed] = useState(false);
-  const [sweepOpen, setSweepOpen] = useState(new Date().getHours() >= 17);
-
-  useEffect(() => {
-    if (hydrated && !settings.onboarded) void navigate({ to: "/welcome" });
-  }, [hydrated, settings.onboarded, navigate]);
-
-  const overdue = useMemo(() => items.filter(isOverdue), [items]);
-  const dueToday = useMemo(() => items.filter(isDueToday), [items]);
-  const waiting = useMemo(
-    () => openItems(items).filter((i) => i.kind === "waiting").sort((a, b) => waitingDays(b) - waitingDays(a)),
-    [items],
-  );
-  const totalToday = overdue.length + dueToday.length;
-
+function HomePage() {
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="text-[28px] font-bold tracking-tight sm:text-[34px]">{greeting(settings.name)}</h1>
-        <p className="mt-1 text-[14px] capitalize text-muted-foreground">{formatDayHeadline()}</p>
-      </div>
+    <MarketingLayout>
+      <Hero />
+      <ProductPreview />
+      <HowItWorks />
+      <Capabilities />
+      <AiMemorySection />
+      <UseCases />
+      <PrivacyTrust />
+      <FinalCta />
+    </MarketingLayout>
+  );
+}
 
-      <div className="rise card-soft mb-9 p-5 sm:p-6">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Briefing NANTI</p>
-        <p className="mt-3 text-[17px] font-medium leading-relaxed sm:text-[19px]">
-          Ada {totalToday} hal yang perlu Anda tangani hari ini.
-          {overdue.length > 0 && <> {overdue.length} sudah terlambat.</>}
-          {waiting.length > 0 && <> {waiting.length} orang sedang Anda tunggu.</>}
-        </p>
-        <p className="mt-3 text-[14px] leading-relaxed text-muted-foreground">
-          Prioritas terbesar Anda hari ini adalah order ekspor ABC. Budi menunggu revisi quotation dan supplier belum
-          mengonfirmasi jadwal pengiriman.
-        </p>
-        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {[
-            { label: "Tugas", value: openItems(items).filter((i) => i.kind !== "waiting").length },
-            { label: "Terlambat", value: overdue.length },
-            { label: "Menunggu", value: waiting.length },
-            { label: "Hari ini", value: dueToday.length },
-          ].map((s) => (
-            <div key={s.label} className="rounded-lg bg-surface-strong/70 px-3 py-2.5">
-              <p className="text-[20px] font-bold leading-none">{s.value}</p>
-              <p className="mt-1.5 text-[12px] text-muted-foreground">{s.label}</p>
+function Hero() {
+  return (
+    <section className="relative overflow-hidden">
+      <div className="mx-auto max-w-6xl px-5 pb-16 pt-20 sm:px-8 sm:pb-24 sm:pt-28">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="eyebrow text-primary">AI Work Memory for WhatsApp</p>
+          <h1 className="display-xl mt-6 text-foreground">
+            Your WhatsApp remembers everything.
+            <br />
+            <span className="text-primary">NANTI</span> remembers what matters.
+          </h1>
+          <p className="mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-muted-foreground">
+            Turn conversations into tasks, commitments, reminders and follow-ups — without having to
+            remember everything yourself.
+          </p>
+          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link
+              to="/welcome"
+              className="inline-flex items-center gap-2 rounded-xl bg-foreground px-6 py-3.5 text-[15px] font-semibold text-background transition-opacity hover:opacity-90"
+            >
+              Start using NANTI
+              <ArrowRight className="size-4" />
+            </Link>
+            <Link
+              to="/how-it-works"
+              className="inline-flex items-center gap-2 rounded-xl border border-border px-6 py-3.5 text-[15px] font-medium text-foreground transition-colors hover:bg-surface"
+            >
+              See how it works
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ProductPreview() {
+  return (
+    <section className="relative px-5 pb-24 sm:px-8">
+      <div className="mx-auto max-w-5xl">
+        <div className="overflow-hidden rounded-2xl border border-border shadow-lift">
+          {/* Browser bar */}
+          <div className="flex items-center gap-2 border-b border-border bg-surface px-4 py-3">
+            <div className="flex gap-1.5">
+              <span className="size-3 rounded-full bg-[#ff5f57]" />
+              <span className="size-3 rounded-full bg-[#febc2e]" />
+              <span className="size-3 rounded-full bg-[#28c840]" />
+            </div>
+            <div className="mx-auto flex items-center gap-2 rounded-md bg-background px-3 py-1 text-[12px] text-muted-foreground">
+              nanti.app/today
+            </div>
+          </div>
+          {/* Preview content */}
+          <div className="bg-background p-6 sm:p-10">
+            <div className="mx-auto max-w-2xl">
+              <p className="text-[22px] font-semibold sm:text-[26px]">Good morning, Rizky.</p>
+              <p className="mt-1.5 text-[15px] text-muted-foreground">What do you need to get done?</p>
+
+              {/* AI input */}
+              <div className="mt-6 flex items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3.5">
+                <Sparkles className="size-5 shrink-0 text-primary" />
+                <span className="flex-1 text-[14.5px] text-muted-foreground">Ask NANTI anything...</span>
+                <span className="rounded-lg bg-foreground px-3 py-1.5 text-[12.5px] font-medium text-background">
+                  Ask
+                </span>
+              </div>
+
+              {/* Suggested prompts */}
+              <div className="mt-3 flex flex-wrap gap-2">
+                {["What am I forgetting today?", "Who am I waiting for?", "What did I promise this week?"].map(
+                  (s) => (
+                    <span
+                      key={s}
+                      className="rounded-full border border-border bg-background px-3 py-1.5 text-[12.5px] text-muted-foreground"
+                    >
+                      {s}
+                    </span>
+                  ),
+                )}
+              </div>
+
+              {/* Day at a glance */}
+              <div className="mt-8">
+                <p className="text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  Your day at a glance
+                </p>
+                <div className="mt-3 grid grid-cols-3 gap-3">
+                  {[
+                    { label: "Tasks", value: "7" },
+                    { label: "Overdue", value: "2" },
+                    { label: "Waiting", value: "5" },
+                  ].map((s) => (
+                    <div key={s.label} className="rounded-xl border border-border bg-surface px-4 py-3.5">
+                      <p className="text-[24px] font-bold leading-none">{s.value}</p>
+                      <p className="mt-2 text-[12.5px] text-muted-foreground">{s.label}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* NANTI noticed something */}
+              <div className="mt-8 rounded-xl border border-primary/25 bg-accent/50 p-5">
+                <div className="flex items-center gap-2">
+                  <Logo showWord={false} />
+                  <p className="text-[12px] font-semibold uppercase tracking-wider text-accent-foreground">
+                    NANTI noticed something
+                  </p>
+                </div>
+                <p className="mt-3 text-[14.5px] leading-relaxed">
+                  "You promised Budi a revised quotation yesterday, but I couldn't find a follow-up after the
+                  conversation."
+                </p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <span className="rounded-lg bg-primary px-3.5 py-1.5 text-[12.5px] font-medium text-primary-foreground">
+                    Follow up
+                  </span>
+                  <span className="rounded-lg border border-border bg-background px-3.5 py-1.5 text-[12.5px] font-medium">
+                    Mark complete
+                  </span>
+                  <span className="rounded-lg px-3.5 py-1.5 text-[12.5px] font-medium text-muted-foreground">
+                    Dismiss
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HowItWorks() {
+  return (
+    <section className="border-y border-border bg-surface py-24">
+      <div className="mx-auto max-w-5xl px-5 sm:px-8">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="display-lg text-foreground">You don't create tasks. You just talk.</h2>
+          <p className="mt-4 text-[16px] leading-relaxed text-muted-foreground">
+            NANTI reads your WhatsApp conversations and extracts commitments automatically. No manual entry. No
+            forgotten promises.
+          </p>
+        </div>
+
+        <div className="mt-16 grid gap-6 md:grid-cols-3">
+          {/* Step 1: WhatsApp */}
+          <div className="rise rounded-2xl border border-border bg-background p-7">
+            <div className="flex size-11 items-center justify-center rounded-xl bg-[#25D366]/10">
+              <MessageSquareText className="size-5 text-[#128C7E]" />
+            </div>
+            <p className="mt-5 text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Step 01
+            </p>
+            <h3 className="mt-2 text-[17px] font-semibold">WhatsApp conversation</h3>
+            <div className="mt-4 rounded-xl bg-surface p-4">
+              <p className="text-[14px] italic leading-relaxed text-muted-foreground">
+                "Besok saya kirim revisinya ya Pak."
+              </p>
+            </div>
+          </div>
+
+          {/* Step 2: NANTI AI */}
+          <div className="rise rounded-2xl border border-border bg-background p-7" style={{ animationDelay: "80ms" }}>
+            <div className="flex size-11 items-center justify-center rounded-xl bg-primary/10">
+              <Brain className="size-5 text-primary" />
+            </div>
+            <p className="mt-5 text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Step 02
+            </p>
+            <h3 className="mt-2 text-[17px] font-semibold">NANTI AI</h3>
+            <p className="mt-3 text-[13.5px] font-medium text-primary">Commitment detected</p>
+            <div className="mt-3 space-y-1.5 text-[13px] text-muted-foreground">
+              <p>Send revised quotation</p>
+              <p>Due tomorrow</p>
+              <p>Budi · PT ABC</p>
+            </div>
+          </div>
+
+          {/* Step 3: Track */}
+          <div className="rise rounded-2xl border border-border bg-background p-7" style={{ animationDelay: "160ms" }}>
+            <div className="flex size-11 items-center justify-center rounded-xl bg-accent">
+              <CheckCircle2 className="size-5 text-accent-foreground" />
+            </div>
+            <p className="mt-5 text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Step 03
+            </p>
+            <h3 className="mt-2 text-[17px] font-semibold">Track</h3>
+            <p className="mt-3 text-[14px] leading-relaxed text-muted-foreground">
+              The commitment appears automatically in your workspace. NANTI follows up so you don't have to.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Capabilities() {
+  const items = [
+    {
+      num: "01",
+      icon: Brain,
+      title: "Remember",
+      desc: "Never lose a promise again. NANTI understands commitments inside conversations.",
+    },
+    {
+      num: "02",
+      icon: Zap,
+      title: "Prioritize",
+      desc: "Know what matters today. NANTI turns scattered conversations into a clear daily briefing.",
+    },
+    {
+      num: "03",
+      icon: Hourglass,
+      title: "Follow Up",
+      desc: "Know who you're waiting for. Track approvals, replies, payments, documents and decisions.",
+    },
+    {
+      num: "04",
+      icon: ArrowRight,
+      title: "Act",
+      desc: "Close the loop. NANTI can eventually help draft and execute follow-ups.",
+    },
+  ];
+  return (
+    <section className="py-24">
+      <div className="mx-auto max-w-5xl px-5 sm:px-8">
+        <div className="grid gap-x-12 gap-y-14 md:grid-cols-2">
+          {items.map((item, i) => (
+            <div key={item.num} className="rise" style={{ animationDelay: `${i * 60}ms` }}>
+              <div className="flex items-center gap-3">
+                <span className="text-[13px] font-semibold text-primary">{item.num}</span>
+                <div className="h-px flex-1 bg-border" />
+              </div>
+              <div className="mt-5 flex items-start gap-4">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-surface border border-border">
+                  <item.icon className="size-5 text-foreground" />
+                </div>
+                <div>
+                  <h3 className="text-[20px] font-semibold">{item.title}</h3>
+                  <p className="mt-2 text-[15px] leading-relaxed text-muted-foreground">{item.desc}</p>
+                </div>
+              </div>
             </div>
           ))}
         </div>
       </div>
+    </section>
+  );
+}
 
-      {overdue.length > 0 && (
-        <Section title="Terlambat" count={overdue.length}>
-          {overdue.map((i, n) => (
-            <ItemRow key={i.id} item={i} index={n} />
+function AiMemorySection() {
+  return (
+    <section className="border-y border-border bg-surface py-24">
+      <div className="mx-auto max-w-4xl px-5 sm:px-8">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="display-lg text-foreground">What am I forgetting?</h2>
+          <p className="mt-4 text-[16px] leading-relaxed text-muted-foreground">
+            Ask NANTI anything about your work. It remembers every commitment, deadline and follow-up from your
+            conversations.
+          </p>
+        </div>
+
+        <div className="mt-14 space-y-5">
+          {/* User message */}
+          <div className="flex justify-end">
+            <div className="max-w-[80%] rounded-2xl bg-foreground px-5 py-3 text-[15px] text-background">
+              What am I forgetting?
+            </div>
+          </div>
+
+          {/* NANTI response */}
+          <div className="rise rounded-2xl border border-border bg-background p-6 sm:p-8">
+            <div className="flex items-center gap-2.5">
+              <Logo showWord={false} />
+              <span className="text-[14px] font-semibold">NANTI</span>
+            </div>
+            <p className="mt-4 text-[15.5px] leading-relaxed">
+              I found 3 things that may need your attention.
+            </p>
+            <div className="mt-5 space-y-4">
+              {[
+                { name: "Budi — PT ABC", text: "You promised a revised quotation yesterday.", icon: Clock },
+                { name: "Supplier China", text: "No response for 3 days.", icon: Hourglass },
+                { name: "Bali Villa", text: "The team discussed a production issue but nobody appears assigned.", icon: MessageSquareText },
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3.5 rounded-xl border border-border bg-surface p-4">
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-background border border-border">
+                    <item.icon className="size-4 text-muted-foreground" />
+                  </div>
+                  <div>
+                    <p className="text-[14px] font-semibold">{item.name}</p>
+                    <p className="mt-0.5 text-[13.5px] text-muted-foreground">{item.text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <Link
+              to="/today"
+              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-[14px] font-semibold text-primary-foreground"
+            >
+              Review all
+              <ArrowRight className="size-4" />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function UseCases() {
+  return (
+    <section className="py-24">
+      <div className="mx-auto max-w-5xl px-5 sm:px-8">
+        <div className="grid gap-6 md:grid-cols-3">
+          {[
+            {
+              title: "For Business Owners",
+              desc: "Your business runs through WhatsApp. NANTI keeps the commitments moving.",
+              link: "/business",
+            },
+            {
+              title: "For Professionals",
+              desc: "Keep track of everything without keeping everything in your head.",
+              link: "/business",
+            },
+            {
+              title: "For Personal",
+              desc: "From work to family, remember what matters.",
+              link: "/personal",
+            },
+          ].map((uc, i) => (
+            <Link
+              key={uc.title}
+              to={uc.link}
+              className="rise group rounded-2xl border border-border p-7 transition-shadow hover:shadow-lift"
+              style={{ animationDelay: `${i * 60}ms` }}
+            >
+              <h3 className="text-[18px] font-semibold">{uc.title}</h3>
+              <p className="mt-2.5 text-[14.5px] leading-relaxed text-muted-foreground">{uc.desc}</p>
+              <span className="mt-4 inline-flex items-center gap-1.5 text-[13.5px] font-medium text-primary">
+                Learn more
+                <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+              </span>
+            </Link>
           ))}
-        </Section>
-      )}
-
-      <Section title="Jatuh tempo hari ini" count={dueToday.length}>
-        {dueToday.length ? (
-          dueToday.map((i, n) => <ItemRow key={i.id} item={i} index={n} />)
-        ) : (
-          <EmptyState title="Tidak ada yang jatuh tempo hari ini." hint="Napas dulu. NANTI tetap menjaga sisanya." />
-        )}
-      </Section>
-
-      <Section title="Anda menunggu" count={waiting.length}>
-        {waiting.slice(0, 4).map((i, n) => {
-          const person = personOf(i.personId);
-          return (
-            <button
-              key={i.id}
-              onClick={() => openDetail(i.id)}
-              style={{ animationDelay: `${n * 35}ms` }}
-              className="rise flex w-full items-center gap-3 rounded-xl border border-transparent px-3 py-3 text-left transition-colors hover:border-border hover:bg-surface"
-            >
-              <Hourglass className="size-4 shrink-0 text-muted-foreground" />
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-[14.5px] font-medium">
-                  {person?.name ?? i.source} — {i.title}
-                </p>
-                <p className="mt-0.5 text-[12.5px] text-muted-foreground">Menunggu {waitingDays(i)} hari</p>
-              </div>
-            </button>
-          );
-        })}
-        <div className="px-3 pt-2">
-          <Link to="/waiting" className="inline-flex items-center gap-1 text-[13px] font-medium text-primary">
-            Lihat semua item menunggu <ArrowRight className="size-3.5" />
-          </Link>
         </div>
-      </Section>
+      </div>
+    </section>
+  );
+}
 
-      {!dismissed && overdue[0] && (
-        <div className="rise mb-8 rounded-xl border border-primary/25 bg-accent/50 p-5">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-accent-foreground">Saran NANTI</p>
-          <p className="mt-2.5 text-[14.5px] leading-relaxed">
-            Anda menjanjikan {overdue[0].title.toLowerCase()} kepada {personOf(overdue[0].personId)?.name ?? "klien"}{" "}
-            kemarin, tetapi saya tidak menemukan tindak lanjut setelah percakapan itu.
-          </p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <Button size="sm" onClick={() => { snooze(overdue[0]!.id, 1); toast("Dijadwalkan untuk follow up hari ini"); }}>
-              Follow up
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => { complete(overdue[0]!.id); toast.success("Ditandai selesai"); }}>
-              Tandai selesai
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => setDismissed(true)}>
-              Abaikan
-            </Button>
-          </div>
+function PrivacyTrust() {
+  return (
+    <section className="border-t border-border bg-surface py-20">
+      <div className="mx-auto max-w-3xl px-5 text-center sm:px-8">
+        <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-background border border-border">
+          <Brain className="size-7 text-primary" />
         </div>
-      )}
+        <h2 className="mt-6 text-[28px] font-semibold tracking-tight sm:text-[32px]">Your conversations are yours.</h2>
+        <p className="mx-auto mt-4 max-w-xl text-[16px] leading-relaxed text-muted-foreground">
+          NANTI processes your conversations to find commitments, but your data is never sold, never shared with
+          third parties, and always yours to delete.
+        </p>
+      </div>
+    </section>
+  );
+}
 
-      {sweepOpen && (overdue.length > 0 || dueToday.length > 0) && (
-        <div className="rise mb-4 rounded-xl border border-border bg-surface p-5">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-            Sebelum Anda tutup hari ini
-          </p>
-          <p className="mt-2.5 text-[15px] font-medium">
-            Masih ada {overdue.length + dueToday.length} hal yang belum selesai.
-          </p>
-          <ul className="mt-3 space-y-1.5">
-            {[...overdue, ...dueToday].slice(0, 5).map((i) => (
-              <li key={i.id} className="text-[13.5px] text-muted-foreground">
-                · {i.title}
-              </li>
-            ))}
-          </ul>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <Button
-              size="sm"
-              onClick={() => {
-                [...overdue, ...dueToday].forEach((i) => {
-                  const d = new Date();
-                  d.setDate(d.getDate() + 1);
-                  update(i.id, { due: d.toISOString().slice(0, 10) });
-                });
-                setSweepOpen(false);
-                toast.success("Semua dipindahkan ke besok");
-              }}
-            >
-              Pindahkan semua ke besok
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => setSweepOpen(false)}>
-              Nanti saja
-            </Button>
-          </div>
-        </div>
-      )}
-    </div>
+function FinalCta() {
+  return (
+    <section className="py-28">
+      <div className="mx-auto max-w-3xl px-5 text-center sm:px-8">
+        <h2 className="display-lg text-foreground">Stop remembering everything.</h2>
+        <p className="mx-auto mt-5 max-w-lg text-[17px] leading-relaxed text-muted-foreground">
+          Let NANTI remember the conversations that matter.
+        </p>
+        <Link
+          to="/welcome"
+          className="mt-9 inline-flex items-center gap-2 rounded-xl bg-foreground px-7 py-4 text-[16px] font-semibold text-background transition-opacity hover:opacity-90"
+        >
+          Get started
+          <ArrowRight className="size-4" />
+        </Link>
+      </div>
+    </section>
   );
 }

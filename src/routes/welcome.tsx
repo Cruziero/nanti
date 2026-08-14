@@ -8,16 +8,16 @@ import { useImportDialog } from "@/components/nanti/import-dialog";
 export const Route = createFileRoute("/welcome")({
   head: () => ({
     meta: [
-      { title: "Mulai dengan NANTI" },
-      { name: "description", content: "Tiga langkah singkat untuk menyiapkan memori kerja AI Anda." },
-      { property: "og:title", content: "Mulai dengan NANTI" },
-      { property: "og:description", content: "Jangan pernah kehilangan komitmen di WhatsApp lagi." },
+      { title: "Get started with NANTI" },
+      { name: "description", content: "Three quick steps to set up your AI work memory." },
+      { property: "og:title", content: "Get started with NANTI" },
+      { property: "og:description", content: "Never lose a commitment in WhatsApp again." },
     ],
   }),
   component: Welcome,
 });
 
-const roles = ["Pemilik bisnis", "Sales", "Manajemen proyek", "Operasional", "Marketing", "Properti", "Lainnya"];
+const roles = ["Business owner", "Sales", "Project management", "Operations", "Marketing", "Property", "Other"];
 const volumes = ["1–10", "10–30", "30–100", "100+"];
 
 function Welcome() {
@@ -28,7 +28,7 @@ function Welcome() {
 
   const finish = () => {
     setSettings({ onboarded: true });
-    void navigate({ to: "/" });
+    void navigate({ to: "/today" });
   };
 
   return (
@@ -38,19 +38,19 @@ function Welcome() {
 
         {step === 0 && (
           <div className="rise">
-            <h1 className="text-[30px] font-bold leading-tight">Selamat datang di NANTI</h1>
+            <h1 className="text-[30px] font-bold leading-tight">Welcome to NANTI</h1>
             <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
-              WhatsApp Anda penuh pekerjaan. NANTI memastikan tidak ada yang terlupakan.
+              Your WhatsApp is full of work. NANTI makes sure nothing gets forgotten.
             </p>
             <Button className="mt-8 w-full" size="lg" onClick={() => setStep(1)}>
-              Mulai
+              Start
             </Button>
           </div>
         )}
 
         {step === 1 && (
           <div className="rise">
-            <h1 className="text-[24px] font-bold">Pekerjaan Anda di bidang apa?</h1>
+            <h1 className="text-[24px] font-bold">What field do you work in?</h1>
             <div className="mt-6 space-y-2">
               {roles.map((r) => (
                 <button
@@ -67,7 +67,7 @@ function Welcome() {
 
         {step === 2 && (
           <div className="rise">
-            <h1 className="text-[24px] font-bold">Berapa banyak percakapan kerja Anda?</h1>
+            <h1 className="text-[24px] font-bold">How many work conversations do you have?</h1>
             <div className="mt-6 space-y-2">
               {volumes.map((v) => (
                 <button
@@ -75,7 +75,7 @@ function Welcome() {
                   onClick={() => { setSettings({ volume: v }); setStep(3); }}
                   className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-left text-[14.5px] transition-colors hover:border-primary/50 hover:bg-accent/40"
                 >
-                  {v} percakapan
+                  {v} conversations
                 </button>
               ))}
             </div>
@@ -84,23 +84,23 @@ function Welcome() {
 
         {step === 3 && (
           <div className="rise">
-            <h1 className="text-[24px] font-bold">Impor percakapan pertama Anda</h1>
+            <h1 className="text-[24px] font-bold">Import your first conversation</h1>
             <p className="mt-2 text-[14px] text-muted-foreground">
-              Tempel satu percakapan WhatsApp dan lihat apa yang NANTI temukan.
+              Paste a WhatsApp conversation and see what NANTI finds.
             </p>
             <div className="mt-6 space-y-2">
               <Button className="w-full" size="lg" onClick={() => { setSettings({ onboarded: true }); openImport(true); }}>
-                Tempel percakapan
+                Paste conversation
               </Button>
               <Button variant="outline" className="w-full" size="lg" onClick={finish}>
-                Coba dengan data demo
+                Try with demo data
               </Button>
             </div>
           </div>
         )}
 
         <p className="mt-10 text-center text-[12px] text-muted-foreground">
-          Jangan pernah kehilangan komitmen di WhatsApp lagi.
+          Never lose a commitment in WhatsApp again.
         </p>
       </div>
     </div>

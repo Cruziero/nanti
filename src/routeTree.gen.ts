@@ -14,8 +14,13 @@ import { Route as AiRouteImport } from './routes/ai'
 import { Route as InboxRouteImport } from './routes/inbox'
 import { Route as PeopleRouteImport } from './routes/people'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as TodayRouteImport } from './routes/today'
 import { Route as WaitingRouteImport } from './routes/waiting'
 import { Route as WelcomeRouteImport } from './routes/welcome'
+import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as BusinessRouteImport } from './routes/business'
+import { Route as PersonalRouteImport } from './routes/personal'
 import { Route as ProjectsIndexRouteImport } from './routes/projects.index'
 import { Route as ProjectsProjectIdRouteImport } from './routes/projects.$projectId'
 
@@ -44,6 +49,11 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TodayRoute = TodayRouteImport.update({
+  id: '/today',
+  path: '/today',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WaitingRoute = WaitingRouteImport.update({
   id: '/waiting',
   path: '/waiting',
@@ -52,6 +62,26 @@ const WaitingRoute = WaitingRouteImport.update({
 const WelcomeRoute = WelcomeRouteImport.update({
   id: '/welcome',
   path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HowItWorksRoute = HowItWorksRouteImport.update({
+  id: '/how-it-works',
+  path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BusinessRoute = BusinessRouteImport.update({
+  id: '/business',
+  path: '/business',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PersonalRoute = PersonalRouteImport.update({
+  id: '/personal',
+  path: '/personal',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
@@ -71,8 +101,13 @@ export interface FileRoutesByFullPath {
   '/inbox': typeof InboxRoute
   '/people': typeof PeopleRoute
   '/settings': typeof SettingsRoute
+  '/today': typeof TodayRoute
   '/waiting': typeof WaitingRoute
   '/welcome': typeof WelcomeRoute
+  '/pricing': typeof PricingRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/business': typeof BusinessRoute
+  '/personal': typeof PersonalRoute
   '/projects/$projectId': typeof ProjectsProjectIdRoute
   '/projects/': typeof ProjectsIndexRoute
 }
@@ -82,8 +117,13 @@ export interface FileRoutesByTo {
   '/inbox': typeof InboxRoute
   '/people': typeof PeopleRoute
   '/settings': typeof SettingsRoute
+  '/today': typeof TodayRoute
   '/waiting': typeof WaitingRoute
   '/welcome': typeof WelcomeRoute
+  '/pricing': typeof PricingRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/business': typeof BusinessRoute
+  '/personal': typeof PersonalRoute
   '/projects/$projectId': typeof ProjectsProjectIdRoute
   '/projects': typeof ProjectsIndexRoute
 }
@@ -94,8 +134,13 @@ export interface FileRoutesById {
   '/inbox': typeof InboxRoute
   '/people': typeof PeopleRoute
   '/settings': typeof SettingsRoute
+  '/today': typeof TodayRoute
   '/waiting': typeof WaitingRoute
   '/welcome': typeof WelcomeRoute
+  '/pricing': typeof PricingRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/business': typeof BusinessRoute
+  '/personal': typeof PersonalRoute
   '/projects/$projectId': typeof ProjectsProjectIdRoute
   '/projects/': typeof ProjectsIndexRoute
 }
@@ -107,8 +152,13 @@ export interface FileRouteTypes {
     | '/inbox'
     | '/people'
     | '/settings'
+    | '/today'
     | '/waiting'
     | '/welcome'
+    | '/pricing'
+    | '/how-it-works'
+    | '/business'
+    | '/personal'
     | '/projects/$projectId'
     | '/projects/'
   fileRoutesByTo: FileRoutesByTo
@@ -118,8 +168,13 @@ export interface FileRouteTypes {
     | '/inbox'
     | '/people'
     | '/settings'
+    | '/today'
     | '/waiting'
     | '/welcome'
+    | '/pricing'
+    | '/how-it-works'
+    | '/business'
+    | '/personal'
     | '/projects/$projectId'
     | '/projects'
   id:
@@ -129,8 +184,13 @@ export interface FileRouteTypes {
     | '/inbox'
     | '/people'
     | '/settings'
+    | '/today'
     | '/waiting'
     | '/welcome'
+    | '/pricing'
+    | '/how-it-works'
+    | '/business'
+    | '/personal'
     | '/projects/$projectId'
     | '/projects/'
   fileRoutesById: FileRoutesById
@@ -141,8 +201,13 @@ export interface RootRouteChildren {
   InboxRoute: typeof InboxRoute
   PeopleRoute: typeof PeopleRoute
   SettingsRoute: typeof SettingsRoute
+  TodayRoute: typeof TodayRoute
   WaitingRoute: typeof WaitingRoute
   WelcomeRoute: typeof WelcomeRoute
+  PricingRoute: typeof PricingRoute
+  HowItWorksRoute: typeof HowItWorksRoute
+  BusinessRoute: typeof BusinessRoute
+  PersonalRoute: typeof PersonalRoute
   ProjectsProjectIdRoute: typeof ProjectsProjectIdRoute
   ProjectsIndexRoute: typeof ProjectsIndexRoute
 }
@@ -184,6 +249,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/today': {
+      id: '/today'
+      path: '/today'
+      fullPath: '/today'
+      preLoaderRoute: typeof TodayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/waiting': {
       id: '/waiting'
       path: '/waiting'
@@ -196,6 +268,34 @@ declare module '@tanstack/react-router' {
       path: '/welcome'
       fullPath: '/welcome'
       preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/how-it-works': {
+      id: '/how-it-works'
+      path: '/how-it-works'
+      fullPath: '/how-it-works'
+      preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/business': {
+      id: '/business'
+      path: '/business'
+      fullPath: '/business'
+      preLoaderRoute: typeof BusinessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/personal': {
+      id: '/personal'
+      path: '/personal'
+      fullPath: '/personal'
+      preLoaderRoute: typeof PersonalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/projects/': {
@@ -221,8 +321,13 @@ const rootRouteChildren: RootRouteChildren = {
   InboxRoute: InboxRoute,
   PeopleRoute: PeopleRoute,
   SettingsRoute: SettingsRoute,
+  TodayRoute: TodayRoute,
   WaitingRoute: WaitingRoute,
   WelcomeRoute: WelcomeRoute,
+  PricingRoute: PricingRoute,
+  HowItWorksRoute: HowItWorksRoute,
+  BusinessRoute: BusinessRoute,
+  PersonalRoute: PersonalRoute,
   ProjectsProjectIdRoute: ProjectsProjectIdRoute,
   ProjectsIndexRoute: ProjectsIndexRoute,
 }
