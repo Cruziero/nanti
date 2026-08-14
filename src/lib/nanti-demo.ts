@@ -1,15 +1,13 @@
 import type { Item, Message, Person, Project } from "./nanti-types";
+import { addDays, todayISO } from "./nanti-utils";
 
-const base = new Date();
-base.setHours(0, 0, 0, 0);
-
+/** Calendar day n days from the real current day, in Asia/Jakarta. */
 export function dayOffset(n: number): string {
-  const d = new Date(base);
-  d.setDate(d.getDate() + n);
-  return d.toISOString().slice(0, 10);
+  return addDays(todayISO(), n);
 }
 
-export const people: Person[] = [
+export function demoPeople(): Person[] {
+  return [
   {
     id: "p-budi",
     name: "Budi Santoso",
@@ -74,9 +72,11 @@ export const people: Person[] = [
     lastConversation: dayOffset(0),
     activity: [{ date: dayOffset(0), text: "Minta rekap penjualan minggu ini sebelum Jumat." }],
   },
-];
+  ];
+}
 
-export const projects: Project[] = [
+export function demoProjects(): Project[] {
+  return [
   {
     id: "pr-abc",
     name: "ABC Export Order",
@@ -101,9 +101,11 @@ export const projects: Project[] = [
     description: "Operasional pabrik harian dan laporan produksi.",
     sources: ["Factory Operations", "Management"],
   },
-];
+  ];
+}
 
-export const messages: Message[] = [
+export function demoMessages(): Message[] {
+  return [
   { id: "m1", source: "Client ABC", sender: "Budi Santoso", text: "Pak Rizky, untuk order ABC yang 500 pcs itu mereka minta update price hari ini ya.", at: dayOffset(0) },
   { id: "m2", source: "Client ABC", sender: "Rizky", text: "Besok saya kirim revisi quotation-nya Pak.", at: dayOffset(-1) },
   { id: "m3", source: "Client ABC", sender: "Budi Santoso", text: "Oke ditunggu ya Pak, owner kami butuh untuk rapat.", at: dayOffset(-1) },
@@ -112,9 +114,11 @@ export const messages: Message[] = [
   { id: "m6", source: "Marketing Team", sender: "Siska Amelia", text: "Final artwork saya kirim nanti sore ya Pak.", at: dayOffset(-1) },
   { id: "m7", source: "Management", sender: "Agus Wijaya", text: "Rekap penjualan harus selesai Jumat ya.", at: dayOffset(0) },
   { id: "m8", source: "Bali Villa Project", sender: "Ibu Dewi", text: "Kalau sudah ada kabar dari kontraktor kabarin saya ya.", at: dayOffset(-1) },
-];
+  ];
+}
 
-export const items: Item[] = [
+export function demoItems(): Item[] {
+  return [
   {
     id: "i1",
     title: "Kirim revisi quotation",
@@ -392,4 +396,5 @@ export const items: Item[] = [
     confidence: 0.87,
     createdBy: "ai",
   },
-];
+  ];
+}
