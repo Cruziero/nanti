@@ -72,7 +72,8 @@ export function demoPeople(): Person[] {
     lastConversation: dayOffset(0),
     activity: [{ date: dayOffset(0), text: "Minta rekap penjualan minggu ini sebelum Jumat." }],
   },
-];
+  ];
+}
 
 export function demoProjects(): Project[] {
   return [
@@ -100,7 +101,8 @@ export function demoProjects(): Project[] {
     description: "Operasional pabrik harian dan laporan produksi.",
     sources: ["Factory Operations", "Management"],
   },
-];
+  ];
+}
 
 export function demoMessages(): Message[] {
   return [
@@ -112,7 +114,8 @@ export function demoMessages(): Message[] {
   { id: "m6", source: "Marketing Team", sender: "Siska Amelia", text: "Final artwork saya kirim nanti sore ya Pak.", at: dayOffset(-1) },
   { id: "m7", source: "Management", sender: "Agus Wijaya", text: "Rekap penjualan harus selesai Jumat ya.", at: dayOffset(0) },
   { id: "m8", source: "Bali Villa Project", sender: "Ibu Dewi", text: "Kalau sudah ada kabar dari kontraktor kabarin saya ya.", at: dayOffset(-1) },
-];
+  ];
+}
 
 export function demoItems(): Item[] {
   return [
@@ -393,4 +396,5 @@ export function demoItems(): Item[] {
     confidence: 0.87,
     createdBy: "ai",
   },
-];
+  ];
+}
