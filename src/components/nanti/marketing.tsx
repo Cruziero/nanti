@@ -39,7 +39,7 @@ export function MarketingNav() {
 
         <div className="hidden items-center gap-3 md:flex">
           <Link
-            to="/today"
+            to="/app"
             className="text-[14px] font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             Log in
@@ -76,7 +76,7 @@ export function MarketingNav() {
             ))}
             <div className="mt-3 flex gap-2 border-t border-border pt-3">
               <Link
-                to="/today"
+                to="/app"
                 onClick={() => setOpen(false)}
                 className="flex-1 rounded-lg border border-border px-4 py-2.5 text-center text-[14px] font-medium"
               >
@@ -113,7 +113,7 @@ export function MarketingFooter() {
             <ul className="mt-3 space-y-2.5">
               <li><Link to="/how-it-works" className="text-[14px] text-muted-foreground hover:text-foreground">How it works</Link></li>
               <li><Link to="/pricing" className="text-[14px] text-muted-foreground hover:text-foreground">Pricing</Link></li>
-              <li><Link to="/today" className="text-[14px] text-muted-foreground hover:text-foreground">Workspace</Link></li>
+              <li><Link to="/app" className="text-[14px] text-muted-foreground hover:text-foreground">Workspace</Link></li>
             </ul>
           </div>
           <div>
