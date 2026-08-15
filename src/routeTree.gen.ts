@@ -10,68 +10,29 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AiRouteImport } from './routes/ai'
-import { Route as InboxRouteImport } from './routes/inbox'
-import { Route as PeopleRouteImport } from './routes/people'
-import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as TodayRouteImport } from './routes/today'
-import { Route as WaitingRouteImport } from './routes/waiting'
-import { Route as WelcomeRouteImport } from './routes/welcome'
-import { Route as PricingRouteImport } from './routes/pricing'
-import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as BusinessRouteImport } from './routes/business'
+import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as PersonalRouteImport } from './routes/personal'
-import { Route as ProjectsIndexRouteImport } from './routes/projects.index'
-import { Route as ProjectsProjectIdRouteImport } from './routes/projects.$projectId'
+import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as WelcomeRouteImport } from './routes/welcome'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppInboxRouteImport } from './routes/app.inbox'
+import { Route as AppPeopleRouteImport } from './routes/app.people'
+import { Route as AppSettingsRouteImport } from './routes/app.settings'
+import { Route as AppTodayRouteImport } from './routes/app.today'
+import { Route as AppWaitingRouteImport } from './routes/app.waiting'
+import { Route as AppProjectsIndexRouteImport } from './routes/app.projects.index'
+import { Route as AppProjectsProjectIdRouteImport } from './routes/app.projects.$projectId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AiRoute = AiRouteImport.update({
-  id: '/ai',
-  path: '/ai',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InboxRoute = InboxRouteImport.update({
-  id: '/inbox',
-  path: '/inbox',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PeopleRoute = PeopleRouteImport.update({
-  id: '/people',
-  path: '/people',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TodayRoute = TodayRouteImport.update({
-  id: '/today',
-  path: '/today',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WaitingRoute = WaitingRouteImport.update({
-  id: '/waiting',
-  path: '/waiting',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WelcomeRoute = WelcomeRouteImport.update({
-  id: '/welcome',
-  path: '/welcome',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PricingRoute = PricingRouteImport.update({
-  id: '/pricing',
-  path: '/pricing',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HowItWorksRoute = HowItWorksRouteImport.update({
-  id: '/how-it-works',
-  path: '/how-it-works',
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BusinessRoute = BusinessRouteImport.update({
@@ -79,137 +40,179 @@ const BusinessRoute = BusinessRouteImport.update({
   path: '/business',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HowItWorksRoute = HowItWorksRouteImport.update({
+  id: '/how-it-works',
+  path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PersonalRoute = PersonalRouteImport.update({
   id: '/personal',
   path: '/personal',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
-  id: '/projects/',
-  path: '/projects/',
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProjectsProjectIdRoute = ProjectsProjectIdRouteImport.update({
+const WelcomeRoute = WelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInboxRoute = AppInboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPeopleRoute = AppPeopleRouteImport.update({
+  id: '/people',
+  path: '/people',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTodayRoute = AppTodayRouteImport.update({
+  id: '/today',
+  path: '/today',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppWaitingRoute = AppWaitingRouteImport.update({
+  id: '/waiting',
+  path: '/waiting',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProjectsIndexRoute = AppProjectsIndexRouteImport.update({
+  id: '/projects/',
+  path: '/projects/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProjectsProjectIdRoute = AppProjectsProjectIdRouteImport.update({
   id: '/projects/$projectId',
   path: '/projects/$projectId',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/ai': typeof AiRoute
-  '/inbox': typeof InboxRoute
-  '/people': typeof PeopleRoute
-  '/settings': typeof SettingsRoute
-  '/today': typeof TodayRoute
-  '/waiting': typeof WaitingRoute
-  '/welcome': typeof WelcomeRoute
-  '/pricing': typeof PricingRoute
-  '/how-it-works': typeof HowItWorksRoute
+  '/app': typeof AppRouteWithChildren
   '/business': typeof BusinessRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/personal': typeof PersonalRoute
-  '/projects/$projectId': typeof ProjectsProjectIdRoute
-  '/projects/': typeof ProjectsIndexRoute
+  '/pricing': typeof PricingRoute
+  '/welcome': typeof WelcomeRoute
+  '/app/inbox': typeof AppInboxRoute
+  '/app/people': typeof AppPeopleRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/today': typeof AppTodayRoute
+  '/app/waiting': typeof AppWaitingRoute
+  '/app/': typeof AppIndexRoute
+  '/app/projects/$projectId': typeof AppProjectsProjectIdRoute
+  '/app/projects/': typeof AppProjectsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/ai': typeof AiRoute
-  '/inbox': typeof InboxRoute
-  '/people': typeof PeopleRoute
-  '/settings': typeof SettingsRoute
-  '/today': typeof TodayRoute
-  '/waiting': typeof WaitingRoute
-  '/welcome': typeof WelcomeRoute
-  '/pricing': typeof PricingRoute
-  '/how-it-works': typeof HowItWorksRoute
   '/business': typeof BusinessRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/personal': typeof PersonalRoute
-  '/projects/$projectId': typeof ProjectsProjectIdRoute
-  '/projects': typeof ProjectsIndexRoute
+  '/pricing': typeof PricingRoute
+  '/welcome': typeof WelcomeRoute
+  '/app/inbox': typeof AppInboxRoute
+  '/app/people': typeof AppPeopleRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/today': typeof AppTodayRoute
+  '/app/waiting': typeof AppWaitingRoute
+  '/app': typeof AppIndexRoute
+  '/app/projects/$projectId': typeof AppProjectsProjectIdRoute
+  '/app/projects': typeof AppProjectsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/ai': typeof AiRoute
-  '/inbox': typeof InboxRoute
-  '/people': typeof PeopleRoute
-  '/settings': typeof SettingsRoute
-  '/today': typeof TodayRoute
-  '/waiting': typeof WaitingRoute
-  '/welcome': typeof WelcomeRoute
-  '/pricing': typeof PricingRoute
-  '/how-it-works': typeof HowItWorksRoute
+  '/app': typeof AppRouteWithChildren
   '/business': typeof BusinessRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/personal': typeof PersonalRoute
-  '/projects/$projectId': typeof ProjectsProjectIdRoute
-  '/projects/': typeof ProjectsIndexRoute
+  '/pricing': typeof PricingRoute
+  '/welcome': typeof WelcomeRoute
+  '/app/inbox': typeof AppInboxRoute
+  '/app/people': typeof AppPeopleRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/today': typeof AppTodayRoute
+  '/app/waiting': typeof AppWaitingRoute
+  '/app/': typeof AppIndexRoute
+  '/app/projects/$projectId': typeof AppProjectsProjectIdRoute
+  '/app/projects/': typeof AppProjectsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/ai'
-    | '/inbox'
-    | '/people'
-    | '/settings'
-    | '/today'
-    | '/waiting'
-    | '/welcome'
-    | '/pricing'
-    | '/how-it-works'
+    | '/app'
     | '/business'
+    | '/how-it-works'
     | '/personal'
-    | '/projects/$projectId'
-    | '/projects/'
+    | '/pricing'
+    | '/welcome'
+    | '/app/inbox'
+    | '/app/people'
+    | '/app/settings'
+    | '/app/today'
+    | '/app/waiting'
+    | '/app/'
+    | '/app/projects/$projectId'
+    | '/app/projects/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/ai'
-    | '/inbox'
-    | '/people'
-    | '/settings'
-    | '/today'
-    | '/waiting'
-    | '/welcome'
-    | '/pricing'
-    | '/how-it-works'
     | '/business'
+    | '/how-it-works'
     | '/personal'
-    | '/projects/$projectId'
-    | '/projects'
+    | '/pricing'
+    | '/welcome'
+    | '/app/inbox'
+    | '/app/people'
+    | '/app/settings'
+    | '/app/today'
+    | '/app/waiting'
+    | '/app'
+    | '/app/projects/$projectId'
+    | '/app/projects'
   id:
     | '__root__'
     | '/'
-    | '/ai'
-    | '/inbox'
-    | '/people'
-    | '/settings'
-    | '/today'
-    | '/waiting'
-    | '/welcome'
-    | '/pricing'
-    | '/how-it-works'
+    | '/app'
     | '/business'
+    | '/how-it-works'
     | '/personal'
-    | '/projects/$projectId'
-    | '/projects/'
+    | '/pricing'
+    | '/welcome'
+    | '/app/inbox'
+    | '/app/people'
+    | '/app/settings'
+    | '/app/today'
+    | '/app/waiting'
+    | '/app/'
+    | '/app/projects/$projectId'
+    | '/app/projects/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AiRoute: typeof AiRoute
-  InboxRoute: typeof InboxRoute
-  PeopleRoute: typeof PeopleRoute
-  SettingsRoute: typeof SettingsRoute
-  TodayRoute: typeof TodayRoute
-  WaitingRoute: typeof WaitingRoute
-  WelcomeRoute: typeof WelcomeRoute
-  PricingRoute: typeof PricingRoute
-  HowItWorksRoute: typeof HowItWorksRoute
+  AppRoute: typeof AppRouteWithChildren
   BusinessRoute: typeof BusinessRoute
+  HowItWorksRoute: typeof HowItWorksRoute
   PersonalRoute: typeof PersonalRoute
-  ProjectsProjectIdRoute: typeof ProjectsProjectIdRoute
-  ProjectsIndexRoute: typeof ProjectsIndexRoute
+  PricingRoute: typeof PricingRoute
+  WelcomeRoute: typeof WelcomeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -221,67 +224,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/ai': {
-      id: '/ai'
-      path: '/ai'
-      fullPath: '/ai'
-      preLoaderRoute: typeof AiRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/inbox': {
-      id: '/inbox'
-      path: '/inbox'
-      fullPath: '/inbox'
-      preLoaderRoute: typeof InboxRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/people': {
-      id: '/people'
-      path: '/people'
-      fullPath: '/people'
-      preLoaderRoute: typeof PeopleRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/today': {
-      id: '/today'
-      path: '/today'
-      fullPath: '/today'
-      preLoaderRoute: typeof TodayRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/waiting': {
-      id: '/waiting'
-      path: '/waiting'
-      fullPath: '/waiting'
-      preLoaderRoute: typeof WaitingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/welcome': {
-      id: '/welcome'
-      path: '/welcome'
-      fullPath: '/welcome'
-      preLoaderRoute: typeof WelcomeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pricing': {
-      id: '/pricing'
-      path: '/pricing'
-      fullPath: '/pricing'
-      preLoaderRoute: typeof PricingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/how-it-works': {
-      id: '/how-it-works'
-      path: '/how-it-works'
-      fullPath: '/how-it-works'
-      preLoaderRoute: typeof HowItWorksRouteImport
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/business': {
@@ -291,6 +238,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BusinessRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/how-it-works': {
+      id: '/how-it-works'
+      path: '/how-it-works'
+      fullPath: '/how-it-works'
+      preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/personal': {
       id: '/personal'
       path: '/personal'
@@ -298,38 +252,111 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PersonalRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/projects/': {
-      id: '/projects/'
-      path: '/projects'
-      fullPath: '/projects/'
-      preLoaderRoute: typeof ProjectsIndexRouteImport
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/projects/$projectId': {
-      id: '/projects/$projectId'
-      path: '/projects/$projectId'
-      fullPath: '/projects/$projectId'
-      preLoaderRoute: typeof ProjectsProjectIdRouteImport
+    '/welcome': {
+      id: '/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof WelcomeRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/inbox': {
+      id: '/app/inbox'
+      path: '/inbox'
+      fullPath: '/app/inbox'
+      preLoaderRoute: typeof AppInboxRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/people': {
+      id: '/app/people'
+      path: '/people'
+      fullPath: '/app/people'
+      preLoaderRoute: typeof AppPeopleRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/settings': {
+      id: '/app/settings'
+      path: '/settings'
+      fullPath: '/app/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/today': {
+      id: '/app/today'
+      path: '/today'
+      fullPath: '/app/today'
+      preLoaderRoute: typeof AppTodayRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/waiting': {
+      id: '/app/waiting'
+      path: '/waiting'
+      fullPath: '/app/waiting'
+      preLoaderRoute: typeof AppWaitingRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/projects/': {
+      id: '/app/projects/'
+      path: '/projects'
+      fullPath: '/app/projects/'
+      preLoaderRoute: typeof AppProjectsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/projects/$projectId': {
+      id: '/app/projects/$projectId'
+      path: '/projects/$projectId'
+      fullPath: '/app/projects/$projectId'
+      preLoaderRoute: typeof AppProjectsProjectIdRouteImport
+      parentRoute: typeof AppRoute
     }
   }
 }
 
+interface AppRouteChildren {
+  AppInboxRoute: typeof AppInboxRoute
+  AppPeopleRoute: typeof AppPeopleRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppTodayRoute: typeof AppTodayRoute
+  AppWaitingRoute: typeof AppWaitingRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppProjectsProjectIdRoute: typeof AppProjectsProjectIdRoute
+  AppProjectsIndexRoute: typeof AppProjectsIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppInboxRoute: AppInboxRoute,
+  AppPeopleRoute: AppPeopleRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppTodayRoute: AppTodayRoute,
+  AppWaitingRoute: AppWaitingRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppProjectsProjectIdRoute: AppProjectsProjectIdRoute,
+  AppProjectsIndexRoute: AppProjectsIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AiRoute: AiRoute,
-  InboxRoute: InboxRoute,
-  PeopleRoute: PeopleRoute,
-  SettingsRoute: SettingsRoute,
-  TodayRoute: TodayRoute,
-  WaitingRoute: WaitingRoute,
-  WelcomeRoute: WelcomeRoute,
-  PricingRoute: PricingRoute,
-  HowItWorksRoute: HowItWorksRoute,
+  AppRoute: AppRouteWithChildren,
   BusinessRoute: BusinessRoute,
+  HowItWorksRoute: HowItWorksRoute,
   PersonalRoute: PersonalRoute,
-  ProjectsProjectIdRoute: ProjectsProjectIdRoute,
-  ProjectsIndexRoute: ProjectsIndexRoute,
+  PricingRoute: PricingRoute,
+  WelcomeRoute: WelcomeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

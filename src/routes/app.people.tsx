@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useNanti } from "@/lib/nanti-store";
 import { formatDate, openItems } from "@/lib/nanti-utils";
 
-export const Route = createFileRoute("/people")({
+export const Route = createFileRoute("/app/people")({
   head: () => ({
     meta: [
       { title: "People · NANTI" },

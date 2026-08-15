@@ -7,7 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { useNanti } from "@/lib/nanti-store";
 
-export const Route = createFileRoute("/settings")({
+export const Route = createFileRoute("/app/settings")({
   head: () => ({
     meta: [
       { title: "Settings · NANTI" },

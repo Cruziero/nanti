@@ -345,7 +345,7 @@ function AiMemorySection() {
               ))}
             </div>
             <Link
-              to="/today"
+              to="/app"
               className="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-[14px] font-semibold text-primary-foreground"
             >
               Review all

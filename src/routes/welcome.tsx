@@ -28,7 +28,7 @@ function Welcome() {
 
   const finish = () => {
     setSettings({ onboarded: true });
-    void navigate({ to: "/today" });
+    void navigate({ to: "/app" });
   };
 
   return (

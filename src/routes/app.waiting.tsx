@@ -7,7 +7,7 @@ import { useNanti } from "@/lib/nanti-store";
 import { formatDate, openItems, waitingDays } from "@/lib/nanti-utils";
 import { useItemDetail } from "@/components/nanti/item-detail";
 
-export const Route = createFileRoute("/waiting")({
+export const Route = createFileRoute("/app/waiting")({
   head: () => ({
     meta: [
       { title: "Waiting · NANTI" },
