@@ -12,7 +12,7 @@ import {
 import { MarketingLayout } from "@/components/nanti/marketing";
 import { Logo } from "@/components/nanti/logo";
 
-export const Route = createFileRoute("/app/")({
+export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "NANTI · Your AI memory for WhatsApp" },
