@@ -14,9 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { NantiProvider } from "@/lib/nanti-store";
 import { ItemDetailProvider } from "@/components/nanti/item-detail";
 import { ImportDialogProvider } from "@/components/nanti/import-dialog";
-import { AppShell } from "@/components/nanti/app-shell";
 import { Toaster } from "@/components/ui/sonner";
-import { useRouterState } from "@tanstack/react-router";
 
 function NotFoundComponent() {
   return (
@@ -83,22 +81,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Hari ini · NANTI" },
+      { title: "NANTI · AI memory for WhatsApp" },
       {
         name: "description",
-        content: "Ringkasan harian dari NANTI : Ingetin lo harus chat siapa hari ini!",
+        content: "NANTI turns your WhatsApp conversations into tracked commitments, reminders and follow-ups.",
       },
       { name: "author", content: "NANTI" },
-      { property: "og:title", content: "Hari ini · NANTI" },
+      { property: "og:title", content: "NANTI · AI memory for WhatsApp" },
       {
         property: "og:description",
-        content: "Ringkasan harian dari NANTI : Ingetin lo harus chat siapa hari ini!",
+        content: "NANTI turns your WhatsApp conversations into tracked commitments, reminders and follow-ups.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Hari ini · NANTI" },
-      { name: "twitter:description", content: "Ringkasan harian dari NANTI : Ingetin lo harus chat siapa hari ini!" },
+      { name: "twitter:title", content: "NANTI · AI memory for WhatsApp" },
+      { name: "twitter:description", content: "NANTI turns your WhatsApp conversations into tracked commitments, reminders and follow-ups." },
       { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/844d94b3-6ea1-4852-8ad5-b5ded283e4f0" },
       { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/844d94b3-6ea1-4852-8ad5-b5ded283e4f0" },
     ],
@@ -138,22 +136,14 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const path = useRouterState({ select: (s) => s.location.pathname });
-  const bare = path.startsWith("/welcome") || path === "/" || path.startsWith("/pricing") || path.startsWith("/how-it-works") || path.startsWith("/business") || path.startsWith("/personal");
 
   return (
     <QueryClientProvider client={queryClient}>
       <NantiProvider>
         <ImportDialogProvider>
           <ItemDetailProvider>
-            {bare ? (
-              /* Required: nested routes render here. */
-              <Outlet />
-            ) : (
-              <AppShell>
-                <Outlet />
-              </AppShell>
-            )}
+            {/* Required: nested routes render here. */}
+            <Outlet />
             <Toaster position="top-center" />
           </ItemDetailProvider>
         </ImportDialogProvider>
