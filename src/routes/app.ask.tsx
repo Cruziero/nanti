@@ -9,7 +9,7 @@ import { useNanti } from "@/lib/nanti-store";
 import { askAssistant } from "@/lib/nanti-ai.functions";
 import { dueLabel, kindLabel, openItems, waitingDays } from "@/lib/nanti-utils";
 
-export const Route = createFileRoute("/ai")({
+export const Route = createFileRoute("/app/ask")({
   head: () => ({
     meta: [
       { title: "Ask NANTI · Your work memory" },

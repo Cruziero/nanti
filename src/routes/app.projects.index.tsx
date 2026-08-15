@@ -3,7 +3,7 @@ import { PageHeader } from "@/components/nanti/app-shell";
 import { useNanti } from "@/lib/nanti-store";
 import { isOverdue, openItems } from "@/lib/nanti-utils";
 
-export const Route = createFileRoute("/projects/")({
+export const Route = createFileRoute("/app/projects/")({
   head: () => ({
     meta: [
       { title: "Projects · NANTI" },
@@ -30,7 +30,7 @@ function ProjectsPage() {
           return (
             <Link
               key={p.id}
-              to="/projects/$projectId"
+              to="/app/projects/$projectId"
               params={{ projectId: p.id }}
               style={{ animationDelay: `${n * 40}ms` }}
               className="rise card-soft block p-5 transition-shadow hover:shadow-lift"

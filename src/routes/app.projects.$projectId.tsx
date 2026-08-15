@@ -5,7 +5,7 @@ import { ItemRow } from "@/components/nanti/item-row";
 import { useNanti } from "@/lib/nanti-store";
 import { formatDate, isOverdue, openItems, waitingDays } from "@/lib/nanti-utils";
 
-export const Route = createFileRoute("/projects/$projectId")({
+export const Route = createFileRoute("/app/projects/$projectId")({
   head: () => ({
     meta: [
       { title: "Project detail · NANTI" },
@@ -33,7 +33,7 @@ function ProjectDetail() {
 
   return (
     <div>
-      <Link to="/projects" className="mb-4 inline-flex items-center gap-1.5 text-[13px] text-muted-foreground hover:text-foreground">
+      <Link to="/app/projects" className="mb-4 inline-flex items-center gap-1.5 text-[13px] text-muted-foreground hover:text-foreground">
         <ArrowLeft className="size-3.5" /> All projects
       </Link>
       <PageHeader title={project.name} subtitle={project.description} />

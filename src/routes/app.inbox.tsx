@@ -8,7 +8,7 @@ import { useNanti } from "@/lib/nanti-store";
 import { dueLabel } from "@/lib/nanti-utils";
 import type { ItemKind } from "@/lib/nanti-types";
 
-export const Route = createFileRoute("/inbox")({
+export const Route = createFileRoute("/app/inbox")({
   head: () => ({
     meta: [
       { title: "Inbox · NANTI" },
