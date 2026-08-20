@@ -1,41 +1,78 @@
 const GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
-const MODEL = "openai/gpt-5.6-sol";
+const TEXT_MODEL = "openai/gpt-5.6-sol";
+const VISION_MODEL = "google/gemini-3-flash-preview";
 
-async function chat(messages: { role: string; content: string }[], json: boolean) {
+type Content = string | Array<Record<string, unknown>>;
+
+async function chat(
+  messages: { role: string; content: Content }[],
+  opts: { json?: boolean; model?: string } = {},
+) {
   const key = process.env["LOVABLE_API_KEY"];
   if (!key) throw new Error("AI belum dikonfigurasi.");
+  const model = opts.model ?? TEXT_MODEL;
   const res = await fetch(GATEWAY, {
     method: "POST",
     headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
     body: JSON.stringify({
-      model: MODEL,
-      reasoning_effort: "none",
+      model,
+      ...(model === TEXT_MODEL ? { reasoning_effort: "none" } : {}),
       messages,
-      ...(json ? { response_format: { type: "json_object" } } : {}),
+      ...(opts.json ? { response_format: { type: "json_object" } } : {}),
     }),
   });
   if (res.status === 429) throw new Error("Terlalu banyak permintaan. Coba lagi sebentar lagi.");
   if (res.status === 402) throw new Error("Kredit AI habis. Tambahkan kredit di workspace Anda.");
-  if (!res.ok) throw new Error(`AI error (${res.status})`);
-  const data = (await res.json()) as { choices?: { message?: { content?: string } }[] };
-  return data.choices?.[0]?.message?.content ?? "";
+  if (!res.ok) {
+    const detail = await res.text().catch(() => "");
+    console.error("AI gateway error", res.status, detail.slice(0, 400));
+    throw new Error(`AI sedang bermasalah (${res.status}). Coba lagi.`);
+  }
+  const data = (await res.json()) as { choices?: { message?: { content?: Content } }[] };
+  const content = data.choices?.[0]?.message?.content;
+  if (typeof content === "string") return content;
+  if (Array.isArray(content)) {
+    return content
+      .map((part) => (typeof part["text"] === "string" ? (part["text"] as string) : ""))
+      .join("");
+  }
+  return "";
+}
+
+/** Models sometimes wrap JSON in prose or code fences. */
+function parseJson<T>(raw: string): T | null {
+  const cleaned = raw.replace(/^```(?:json)?/i, "").replace(/```$/i, "").trim();
+  const start = cleaned.indexOf("{");
+  const end = cleaned.lastIndexOf("}");
+  const candidate = start >= 0 && end > start ? cleaned.slice(start, end + 1) : cleaned;
+  try {
+    return JSON.parse(candidate) as T;
+  } catch {
+    return null;
+  }
 }
 
 const EXTRACT_SYSTEM = `Kamu adalah NANTI, asisten kerja AI untuk pengguna Indonesia yang bekerja lewat WhatsApp.
-Tugasmu: membaca potongan percakapan WhatsApp dan mengekstrak HANYA hal yang benar-benar actionable.
+Tugasmu: membaca potongan percakapan WhatsApp dan mengekstrak HANYA hal yang benar-benar perlu diingat.
 
-Klasifikasi tipe:
-- "task": permintaan pekerjaan ("Tolong cek stok besok")
-- "commitment": janji dari pengguna ("Besok saya kirim")
+Klasifikasi setiap pesan penting ke salah satu tipe:
+- "commitment": janji yang dibuat seseorang ("Besok saya kirim revisi quotation")
+- "task": permintaan pekerjaan kepada pengguna ("Tolong cek stok besok")
 - "deadline": tenggat eksplisit ("Harus selesai Jumat")
-- "waiting": pengguna menunggu orang lain ("Saya masih tunggu approval")
-- "followup": perlu ditindaklanjuti nanti ("Nanti follow up lagi ya")
+- "waiting": pengguna menunggu pihak lain ("Saya masih tunggu approval owner")
+- "followup": perlu ditindaklanjuti nanti tanpa tenggat jelas ("Nanti kabarin lagi ya")
+- "information": konteks, basa-basi, pengumuman, atau info biasa
 
-JANGAN mengubah setiap kalimat menjadi tugas. Basa-basi, informasi biasa, pertanyaan sederhana, dan pengumuman TIDAK diekstrak.
+ATURAN PENTING:
+- JANGAN mengubah setiap kalimat menjadi tugas. Sebagian besar pesan adalah "information".
+- Item bertipe "information" TIDAK boleh dimasukkan ke daftar items; ringkas saja di field "context".
+- Buat "commitment" hanya bila keyakinan tinggi (confidence >= 0.8). Bila ragu, gunakan tipe lain atau abaikan.
+- confidence adalah angka 0..1 yang jujur. Item dengan confidence < 0.5 jangan dikeluarkan.
+- Deteksi juga proyek/klien yang dibahas (mis. "ABC Export") bila jelas disebut.
 
-Balas HANYA JSON valid:
-{"summary":"kalimat ringkas Bahasa Indonesia","items":[{"title":"","kind":"task|commitment|deadline|waiting|followup","priority":"high|medium|low","dueOffsetDays":0,"person":"nama atau null","org":"nama perusahaan atau null","source":"nama grup/chat","quote":"kutipan asli","aiNote":"interpretasi singkat Bahasa Indonesia","confidence":0.0}]}
-dueOffsetDays: 0 = hari ini, 1 = besok, dst. null jika tidak ada tenggat. Untuk "waiting" gunakan null.`;
+Balas HANYA JSON valid dengan bentuk:
+{"summary":"kalimat ringkas Bahasa Indonesia","context":["poin informasi non-actionable"],"projects":["nama proyek/klien"],"items":[{"title":"","kind":"commitment|task|deadline|waiting|followup","priority":"high|medium|low","dueOffsetDays":0,"person":"nama atau null","org":"nama perusahaan atau null","project":"nama proyek atau null","source":"nama grup/chat atau null","quote":"kutipan asli persis dari percakapan","aiNote":"kenapa NANTI mendeteksi ini, 1-2 kalimat Bahasa Indonesia","confidence":0.0}]}
+dueOffsetDays: 0 = hari ini, 1 = besok, dst. null jika tidak ada tenggat. Untuk "waiting" selalu null.`;
 
 export interface ExtractedItem {
   title: string;
@@ -44,29 +81,90 @@ export interface ExtractedItem {
   dueOffsetDays: number | null;
   person: string | null;
   org: string | null;
+  project: string | null;
   source: string | null;
   quote: string;
   aiNote: string;
   confidence: number;
 }
 
-export async function extractItems(text: string, sourceHint?: string) {
+export interface ExtractResult {
+  summary: string;
+  context: string[];
+  projects: string[];
+  items: ExtractedItem[];
+}
+
+const KINDS = ["task", "commitment", "deadline", "waiting", "followup"] as const;
+
+function clean(parsed: Partial<ExtractResult> | null): ExtractResult {
+  const items = Array.isArray(parsed?.items) ? parsed.items : [];
+  return {
+    summary: typeof parsed?.summary === "string" ? parsed.summary : "",
+    context: Array.isArray(parsed?.context) ? parsed.context.filter((c) => typeof c === "string") : [],
+    projects: Array.isArray(parsed?.projects) ? parsed.projects.filter((p) => typeof p === "string") : [],
+    items: items
+      .filter((i) => i && typeof i.title === "string" && i.title.trim())
+      .map((i) => ({
+        ...i,
+        kind: (KINDS as readonly string[]).includes(i.kind) ? i.kind : "task",
+        priority: ["high", "medium", "low"].includes(i.priority) ? i.priority : "medium",
+        confidence: typeof i.confidence === "number" ? Math.min(1, Math.max(0, i.confidence)) : 0.7,
+        quote: typeof i.quote === "string" ? i.quote : "",
+        aiNote: typeof i.aiNote === "string" ? i.aiNote : "",
+        person: i.person ?? null,
+        org: i.org ?? null,
+        project: i.project ?? null,
+        source: i.source ?? null,
+        dueOffsetDays: typeof i.dueOffsetDays === "number" ? i.dueOffsetDays : null,
+      }))
+      // Only keep confident detections; commitments need a higher bar.
+      .filter((i) => i.confidence >= (i.kind === "commitment" ? 0.8 : 0.5)),
+  };
+}
+
+const EMPTY: ExtractResult = {
+  summary: "NANTI tidak dapat membaca percakapan ini.",
+  context: [],
+  projects: [],
+  items: [],
+};
+
+export async function extractItems(text: string, sourceHint?: string): Promise<ExtractResult> {
   const raw = await chat(
     [
       { role: "system", content: EXTRACT_SYSTEM },
-      { role: "user", content: `Nama grup/chat (jika tahu): ${sourceHint || "tidak diketahui"}\n\nPercakapan:\n${text}` },
+      {
+        role: "user",
+        content: `Nama grup/chat (jika tahu): ${sourceHint || "tidak diketahui"}\n\nPercakapan:\n${text}`,
+      },
     ],
-    true,
+    { json: true },
   );
-  try {
-    const parsed = JSON.parse(raw) as { summary?: string; items?: ExtractedItem[] };
-    return {
-      summary: parsed.summary ?? "",
-      items: Array.isArray(parsed.items) ? parsed.items : ([] as ExtractedItem[]),
-    };
-  } catch {
-    return { summary: "NANTI tidak dapat membaca percakapan ini.", items: [] as ExtractedItem[] };
-  }
+  return clean(parseJson<ExtractResult>(raw)) ?? EMPTY;
+}
+
+/** Reads a WhatsApp screenshot, transcribes it, then extracts the same structure. */
+export async function extractFromImage(dataUrl: string, sourceHint?: string): Promise<ExtractResult> {
+  const raw = await chat(
+    [
+      { role: "system", content: EXTRACT_SYSTEM },
+      {
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text: `Ini screenshot percakapan WhatsApp. Baca semua teksnya (termasuk nama pengirim), lalu ekstrak sesuai instruksi. Nama grup/chat (jika tahu): ${sourceHint || "dari screenshot"}. Balas hanya JSON.`,
+          },
+          { type: "image_url", image_url: { url: dataUrl } },
+        ],
+      },
+    ],
+    { model: VISION_MODEL },
+  );
+  const parsed = parseJson<ExtractResult>(raw);
+  if (!parsed) return { ...EMPTY, summary: "NANTI tidak dapat membaca screenshot ini." };
+  return clean(parsed);
 }
 
 const ASK_SYSTEM = `Kamu adalah NANTI, chief of staff AI berbahasa Indonesia.
@@ -76,11 +174,9 @@ Sebutkan nama orang dan tenggat bila relevan. Maksimal 180 kata. Gunakan daftar 
 Jangan mengarang data yang tidak ada dalam konteks.`;
 
 export async function askNanti(question: string, context: string) {
-  return chat(
-    [
-      { role: "system", content: ASK_SYSTEM },
-      { role: "user", content: `Memori kerja saat ini:\n${context}\n\nPertanyaan: ${question}` },
-    ],
-    false,
-  );
+  const answer = await chat([
+    { role: "system", content: ASK_SYSTEM },
+    { role: "user", content: `Memori kerja saat ini:\n${context}\n\nPertanyaan: ${question}` },
+  ]);
+  return answer.trim() || "Maaf, saya belum bisa menjawab itu sekarang.";
 }

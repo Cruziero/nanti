@@ -10,6 +10,20 @@ export const analyzeConversation = createServerFn({ method: "POST" })
     return extractItems(data.text, data.source);
   });
 
+export const analyzeScreenshot = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) =>
+    z
+      .object({
+        image: z.string().min(32).max(8_000_000).startsWith("data:image/"),
+        source: z.string().max(120).optional(),
+      })
+      .parse(data),
+  )
+  .handler(async ({ data }) => {
+    const { extractFromImage } = await import("./nanti-ai.server");
+    return extractFromImage(data.image, data.source);
+  });
+
 export const askAssistant = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) =>
     z.object({ question: z.string().min(1).max(2000), context: z.string().max(20000) }).parse(data),
