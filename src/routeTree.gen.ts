@@ -17,6 +17,7 @@ import { Route as PersonalRouteImport } from './routes/personal'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppImportRouteImport } from './routes/app.import'
 import { Route as AppInboxRouteImport } from './routes/app.inbox'
 import { Route as AppPeopleRouteImport } from './routes/app.people'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
@@ -65,6 +66,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppImportRoute = AppImportRouteImport.update({
+  id: '/import',
+  path: '/import',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppInboxRoute = AppInboxRouteImport.update({
   id: '/inbox',
   path: '/inbox',
@@ -109,6 +115,7 @@ export interface FileRoutesByFullPath {
   '/personal': typeof PersonalRoute
   '/pricing': typeof PricingRoute
   '/welcome': typeof WelcomeRoute
+  '/app/import': typeof AppImportRoute
   '/app/inbox': typeof AppInboxRoute
   '/app/people': typeof AppPeopleRoute
   '/app/settings': typeof AppSettingsRoute
@@ -125,6 +132,7 @@ export interface FileRoutesByTo {
   '/personal': typeof PersonalRoute
   '/pricing': typeof PricingRoute
   '/welcome': typeof WelcomeRoute
+  '/app/import': typeof AppImportRoute
   '/app/inbox': typeof AppInboxRoute
   '/app/people': typeof AppPeopleRoute
   '/app/settings': typeof AppSettingsRoute
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   '/personal': typeof PersonalRoute
   '/pricing': typeof PricingRoute
   '/welcome': typeof WelcomeRoute
+  '/app/import': typeof AppImportRoute
   '/app/inbox': typeof AppInboxRoute
   '/app/people': typeof AppPeopleRoute
   '/app/settings': typeof AppSettingsRoute
@@ -162,6 +171,7 @@ export interface FileRouteTypes {
     | '/personal'
     | '/pricing'
     | '/welcome'
+    | '/app/import'
     | '/app/inbox'
     | '/app/people'
     | '/app/settings'
@@ -178,6 +188,7 @@ export interface FileRouteTypes {
     | '/personal'
     | '/pricing'
     | '/welcome'
+    | '/app/import'
     | '/app/inbox'
     | '/app/people'
     | '/app/settings'
@@ -195,6 +206,7 @@ export interface FileRouteTypes {
     | '/personal'
     | '/pricing'
     | '/welcome'
+    | '/app/import'
     | '/app/inbox'
     | '/app/people'
     | '/app/settings'
@@ -273,6 +285,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/import': {
+      id: '/app/import'
+      path: '/import'
+      fullPath: '/app/import'
+      preLoaderRoute: typeof AppImportRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/inbox': {
       id: '/app/inbox'
       path: '/inbox'
@@ -326,6 +345,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppImportRoute: typeof AppImportRoute
   AppInboxRoute: typeof AppInboxRoute
   AppPeopleRoute: typeof AppPeopleRoute
   AppSettingsRoute: typeof AppSettingsRoute
@@ -337,6 +357,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppImportRoute: AppImportRoute,
   AppInboxRoute: AppInboxRoute,
   AppPeopleRoute: AppPeopleRoute,
   AppSettingsRoute: AppSettingsRoute,
