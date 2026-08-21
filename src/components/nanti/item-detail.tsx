@@ -5,6 +5,29 @@ import { Button } from "@/components/ui/button";
 import { KindBadge } from "./kind-badge";
 import { useNanti } from "@/lib/nanti-store";
 import { dueLabel, formatDate, priorityLabel } from "@/lib/nanti-utils";
+import type { Item } from "@/lib/nanti-types";
+
+const sourceTypeLabel: Record<string, string> = {
+  paste: "Tempel percakapan",
+  screenshot: "Screenshot",
+  demo: "Contoh",
+  manual: "Dibuat manual",
+};
+
+/** Simple derived history for a commitment. */
+function timeline(item: Item): { text: string; when: string }[] {
+  const rows: { text: string; when: string }[] = [
+    {
+      text: `Terdeteksi NANTI dari ${item.source}`,
+      when: item.createdAt ? formatDate(item.createdAt) : "Saat impor percakapan",
+    },
+  ];
+  if (item.since) rows.push({ text: "Mulai menunggu", when: formatDate(item.since) });
+  if (item.due) rows.push({ text: "Tenggat", when: formatDate(item.due) });
+  if (item.status === "done") rows.push({ text: "Diselesaikan", when: "Selesai" });
+  if (item.status === "received") rows.push({ text: "Sudah diterima", when: "Selesai" });
+  return rows;
+}
 
 const Ctx = createContext<(id: string | null) => void>(() => {});
 export const useItemDetail = () => useContext(Ctx);
@@ -46,14 +69,15 @@ export function ItemDetailProvider({ children }: { children: ReactNode }) {
               </SheetHeader>
 
               <div className="px-6 py-4">
-                <Field label="Orang">{person ? `${person.name} — ${person.org}` : "—"}</Field>
-                <Field label="Proyek">{project?.name ?? "—"}</Field>
+                <Field label="Orang">{person ? `${person.name} — ${person.org}` : (item.personName ?? "—")}</Field>
+                <Field label="Proyek">{project?.name ?? item.projectName ?? "—"}</Field>
                 <Field label="Tenggat">
                   {item.kind === "waiting" ? `Sejak ${formatDate(item.since)}` : formatDate(item.due)}
                 </Field>
                 <Field label="Prioritas">{priorityLabel[item.priority]}</Field>
                 <Field label="Status">{dueLabel(item)}</Field>
                 <Field label="Terdeteksi dari">{item.source}</Field>
+                <Field label="Cara impor">{sourceTypeLabel[item.sourceType ?? "manual"] ?? "—"}</Field>
                 <Field label="Dibuat oleh">{item.createdBy === "ai" ? "NANTI (AI)" : "Anda"}</Field>
                 <Field label="Keyakinan AI">{Math.round(item.confidence * 100)}%</Field>
 
@@ -108,6 +132,17 @@ export function ItemDetailProvider({ children }: { children: ReactNode }) {
                   </Button>
                   <Button variant="outline" size="sm" onClick={() => { snooze(item.id, 1); toast("Ditunda ke besok"); }}>
                     Tunda 1 hari
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      update(item.id, { kind: "followup", status: "open" });
+                      snooze(item.id, 1);
+                      toast("Dijadwalkan untuk ditindaklanjuti besok");
+                    }}
+                  >
+                    Tindak lanjut
                   </Button>
                   <Button variant="outline" size="sm" onClick={() => { snooze(item.id, 7); toast("Dijadwalkan ulang"); }}>
                     Ubah ke minggu depan
