@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { Logo } from "./logo";
 import { useNanti } from "@/lib/nanti-store";
-import { useImportDialog } from "./import-dialog";
 import { isOverdue, openItems } from "@/lib/nanti-utils";
 
 const groups = [
@@ -40,7 +39,6 @@ const mobileNav = [
 
 export function AppShell({ children }: { children: ReactNode }) {
   const { items, hydrated } = useNanti();
-  const openImport = useImportDialog();
   const path = useRouterState({ select: (s) => s.location.pathname });
 
   const counts: Record<string, number> = hydrated
@@ -61,15 +59,15 @@ export function AppShell({ children }: { children: ReactNode }) {
           <Logo />
         </div>
 
-        <button
-          onClick={() => openImport(true)}
+        <Link
+          to="/app/import"
           className="mb-6 flex items-center gap-2 rounded-xl border border-border bg-background px-3 py-2.5 text-[13.5px] font-semibold transition-colors hover:border-primary/40 hover:bg-accent"
         >
           <span className="flex size-5 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <Plus className="size-3.5" />
           </span>
           Impor percakapan
-        </button>
+        </Link>
 
         <nav className="flex-1 space-y-6">
           {groups.map((group, gi) => (
@@ -124,12 +122,12 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-background/85 px-4 py-3 backdrop-blur lg:hidden">
         <Logo />
-        <button
-          onClick={() => openImport(true)}
+        <Link
+          to="/app/import"
           className="rounded-lg bg-primary px-3 py-1.5 text-[13px] font-semibold text-primary-foreground"
         >
           Impor
-        </button>
+        </Link>
       </header>
 
       <main className="pb-24 lg:pb-16 lg:pl-[248px]">
@@ -155,13 +153,13 @@ export function AppShell({ children }: { children: ReactNode }) {
         })}
       </nav>
 
-      <button
+      <Link
         aria-label="Impor percakapan"
-        onClick={() => openImport(true)}
+        to="/app/import"
         className="fixed bottom-20 right-4 z-30 flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lift transition-transform active:scale-95 lg:hidden"
       >
         <Plus className="size-5" />
-      </button>
+      </Link>
     </div>
   );
 }
