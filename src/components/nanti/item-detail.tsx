@@ -63,9 +63,37 @@ export function ItemDetailProvider({ children }: { children: ReactNode }) {
                 </div>
 
                 <div className="mt-3 rounded-xl border border-primary/20 bg-accent/50 p-4">
-                  <p className="text-[11px] uppercase tracking-wider text-accent-foreground">Interpretasi NANTI</p>
-                  <p className="mt-2 text-[14px] leading-relaxed text-foreground">{item.aiNote}</p>
+                  <p className="text-[11px] uppercase tracking-wider text-accent-foreground">
+                    Kenapa NANTI mendeteksi ini
+                  </p>
+                  <p className="mt-2 text-[14px] leading-relaxed text-foreground">
+                    {item.aiNote || "Terdeteksi dari percakapan yang Anda impor."}
+                  </p>
                 </div>
+
+                <div className="mt-3 rounded-xl border border-border p-4">
+                  <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Linimasa</p>
+                  <ol className="mt-3 space-y-3">
+                    {timeline(item).map((t, i) => (
+                      <li key={i} className="flex gap-3">
+                        <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
+                        <div>
+                          <p className="text-[13.5px] text-foreground">{t.text}</p>
+                          <p className="text-[12px] text-muted-foreground">{t.when}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+
+                <div className="mt-3 rounded-xl border border-dashed border-border p-4">
+                  <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Bukti</p>
+                  <p className="mt-2 text-[13px] text-muted-foreground">
+                    Lampiran dan screenshot asli akan tersimpan di sini pada versi berikutnya.
+                  </p>
+                </div>
+
+
 
                 <div className="mt-6 flex flex-wrap gap-2 pb-8">
                   <Button
