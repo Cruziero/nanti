@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Logo } from "@/components/nanti/logo";
 import { Button } from "@/components/ui/button";
 import { useNanti } from "@/lib/nanti-store";
-import { useImportDialog } from "@/components/nanti/import-dialog";
 
 export const Route = createFileRoute("/welcome")({
   head: () => ({
@@ -24,7 +23,6 @@ function Welcome() {
   const [step, setStep] = useState(0);
   const { setSettings } = useNanti();
   const navigate = useNavigate();
-  const openImport = useImportDialog();
 
   const finish = () => {
     setSettings({ onboarded: true });
@@ -89,7 +87,7 @@ function Welcome() {
               Paste a WhatsApp conversation and see what NANTI finds.
             </p>
             <div className="mt-6 space-y-2">
-              <Button className="w-full" size="lg" onClick={() => { setSettings({ onboarded: true }); openImport(true); }}>
+              <Button className="w-full" size="lg" onClick={() => { setSettings({ onboarded: true }); void navigate({ to: "/app/import" }); }}>
                 Paste conversation
               </Button>
               <Button variant="outline" className="w-full" size="lg" onClick={finish}>

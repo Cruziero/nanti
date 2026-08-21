@@ -5,6 +5,29 @@ import { Button } from "@/components/ui/button";
 import { KindBadge } from "./kind-badge";
 import { useNanti } from "@/lib/nanti-store";
 import { dueLabel, formatDate, priorityLabel } from "@/lib/nanti-utils";
+import type { Item } from "@/lib/nanti-types";
+
+const sourceTypeLabel: Record<string, string> = {
+  paste: "Tempel percakapan",
+  screenshot: "Screenshot",
+  demo: "Contoh",
+  manual: "Dibuat manual",
+};
+
+/** Simple derived history for a commitment. */
+function timeline(item: Item): { text: string; when: string }[] {
+  const rows: { text: string; when: string }[] = [
+    {
+      text: `Terdeteksi NANTI dari ${item.source}`,
+      when: item.createdAt ? formatDate(item.createdAt) : "Saat impor percakapan",
+    },
+  ];
+  if (item.since) rows.push({ text: "Mulai menunggu", when: formatDate(item.since) });
+  if (item.due) rows.push({ text: "Tenggat", when: formatDate(item.due) });
+  if (item.status === "done") rows.push({ text: "Diselesaikan", when: "Selesai" });
+  if (item.status === "received") rows.push({ text: "Sudah diterima", when: "Selesai" });
+  return rows;
+}
 
 const Ctx = createContext<(id: string | null) => void>(() => {});
 export const useItemDetail = () => useContext(Ctx);
@@ -46,14 +69,15 @@ export function ItemDetailProvider({ children }: { children: ReactNode }) {
               </SheetHeader>
 
               <div className="px-6 py-4">
-                <Field label="Orang">{person ? `${person.name} — ${person.org}` : "—"}</Field>
-                <Field label="Proyek">{project?.name ?? "—"}</Field>
+                <Field label="Orang">{person ? `${person.name} — ${person.org}` : (item.personName ?? "—")}</Field>
+                <Field label="Proyek">{project?.name ?? item.projectName ?? "—"}</Field>
                 <Field label="Tenggat">
                   {item.kind === "waiting" ? `Sejak ${formatDate(item.since)}` : formatDate(item.due)}
                 </Field>
                 <Field label="Prioritas">{priorityLabel[item.priority]}</Field>
                 <Field label="Status">{dueLabel(item)}</Field>
                 <Field label="Terdeteksi dari">{item.source}</Field>
+                <Field label="Cara impor">{sourceTypeLabel[item.sourceType ?? "manual"] ?? "—"}</Field>
                 <Field label="Dibuat oleh">{item.createdBy === "ai" ? "NANTI (AI)" : "Anda"}</Field>
                 <Field label="Keyakinan AI">{Math.round(item.confidence * 100)}%</Field>
 
@@ -63,9 +87,37 @@ export function ItemDetailProvider({ children }: { children: ReactNode }) {
                 </div>
 
                 <div className="mt-3 rounded-xl border border-primary/20 bg-accent/50 p-4">
-                  <p className="text-[11px] uppercase tracking-wider text-accent-foreground">Interpretasi NANTI</p>
-                  <p className="mt-2 text-[14px] leading-relaxed text-foreground">{item.aiNote}</p>
+                  <p className="text-[11px] uppercase tracking-wider text-accent-foreground">
+                    Kenapa NANTI mendeteksi ini
+                  </p>
+                  <p className="mt-2 text-[14px] leading-relaxed text-foreground">
+                    {item.aiNote || "Terdeteksi dari percakapan yang Anda impor."}
+                  </p>
                 </div>
+
+                <div className="mt-3 rounded-xl border border-border p-4">
+                  <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Linimasa</p>
+                  <ol className="mt-3 space-y-3">
+                    {timeline(item).map((t, i) => (
+                      <li key={i} className="flex gap-3">
+                        <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
+                        <div>
+                          <p className="text-[13.5px] text-foreground">{t.text}</p>
+                          <p className="text-[12px] text-muted-foreground">{t.when}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+
+                <div className="mt-3 rounded-xl border border-dashed border-border p-4">
+                  <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Bukti</p>
+                  <p className="mt-2 text-[13px] text-muted-foreground">
+                    Lampiran dan screenshot asli akan tersimpan di sini pada versi berikutnya.
+                  </p>
+                </div>
+
+
 
                 <div className="mt-6 flex flex-wrap gap-2 pb-8">
                   <Button
@@ -80,6 +132,17 @@ export function ItemDetailProvider({ children }: { children: ReactNode }) {
                   </Button>
                   <Button variant="outline" size="sm" onClick={() => { snooze(item.id, 1); toast("Ditunda ke besok"); }}>
                     Tunda 1 hari
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      update(item.id, { kind: "followup", status: "open" });
+                      snooze(item.id, 1);
+                      toast("Dijadwalkan untuk ditindaklanjuti besok");
+                    }}
+                  >
+                    Tindak lanjut
                   </Button>
                   <Button variant="outline" size="sm" onClick={() => { snooze(item.id, 7); toast("Dijadwalkan ulang"); }}>
                     Ubah ke minggu depan

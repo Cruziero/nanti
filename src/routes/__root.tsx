@@ -13,7 +13,6 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { NantiProvider } from "@/lib/nanti-store";
 import { ItemDetailProvider } from "@/components/nanti/item-detail";
-import { ImportDialogProvider } from "@/components/nanti/import-dialog";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
@@ -140,13 +139,11 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <NantiProvider>
-        <ImportDialogProvider>
           <ItemDetailProvider>
             {/* Required: nested routes render here. */}
             <Outlet />
             <Toaster position="top-center" />
           </ItemDetailProvider>
-        </ImportDialogProvider>
       </NantiProvider>
     </QueryClientProvider>
   );
